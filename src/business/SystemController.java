@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import business.exceptions.LibrarySystemException;
 import business.exceptions.LoginException;
 import dataaccess.Auth;
 import dataaccess.DataAccess;
@@ -58,13 +59,27 @@ public class SystemController implements ControllerInterface {
 		return retval;
 	}
 
-	public BookCopy[] getBookCopies(String ISBN){
-		for (Book b : da.readBooksMap().values()){
+	public Book getBook(String ISBN) throws LibrarySystemException {
+		for(Book b : da.readBooksMap().values()){
 			if(b.getIsbn().equals(ISBN)){
-				return b.getCopies();
+				return b;
 			}
 		}
-		return new BookCopy[]{};
+		throw new LibrarySystemException("ISBN searched for does not exist");
+	}
+	public BookCopy[] getBookCopies(String ISBN) throws LibrarySystemException{
+
+		Book b = getBook(ISBN);
+		return b.getCopies();
+	}
+
+	public void addBook(String isbn, String title, int maxCheckoutLength, List<Author> authors){
+		Book newBook = new Book(isbn, title, maxCheckoutLength, authors);
+		da.saveNewBook(newBook);
+	}
+
+	public void addCopy(String isbn) throws LibrarySystemException {
+		getBook(isbn).addBookCopy();
 	}
 
 }
