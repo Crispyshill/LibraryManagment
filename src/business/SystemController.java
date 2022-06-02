@@ -106,7 +106,7 @@ public class SystemController implements ControllerInterface {
 	}
 
 	@Override
-	public void addBook(String isbn , String title , int maxBorrowDays, List<Author> authors) {
+	public void addBook(String isbn , String title , int maxBorrowDays, List<Author> authors) throws BookCopyException{
 		Book book = new Book(isbn, title, maxBorrowDays, authors);
 		BookController bookController = new BookController();
 		bookController.addNewBook(book, da);
