@@ -6,6 +6,8 @@ import java.util.List;
 
 import UI.AdminWindow;
 import business.Controllers.BookController;
+import business.Controllers.BookCopyController;
+import business.exceptions.BookCopyException;
 import business.exceptions.LibrarySystemException;
 import business.exceptions.LoginException;
 import dataaccess.Auth;
@@ -76,13 +78,10 @@ public class SystemController implements ControllerInterface {
 		return b.getCopies();
 	}
 
-	public void addBook(String isbn, String title, int maxCheckoutLength, List<Author> authors){
-		Book newBook = new Book(isbn, title, maxCheckoutLength, authors);
-		da.saveNewBook(newBook);
-	}
 
-	public void addCopy(String isbn) throws LibrarySystemException {
-		getBook(isbn).addBookCopy();
+	public void addCopy(String isbn) throws BookCopyException {
+		BookCopyController bcc = new BookCopyController();
+		bcc.addNewBookCopy(isbn, da);
 	}
 
 	@Override
@@ -107,10 +106,9 @@ public class SystemController implements ControllerInterface {
 	}
 
 	@Override
-	public boolean addBook(String isbn , String title , int maxBorrowDays, List<Author> authors) throws BookCopyException {
+	public void addBook(String isbn , String title , int maxBorrowDays, List<Author> authors) {
 		Book book = new Book(isbn, title, maxBorrowDays, authors);
 		BookController bookController = new BookController();
-		bookController.addNewBook(book);
-		return true;
+		bookController.addNewBook(book, da);
 	}
 }
