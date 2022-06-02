@@ -1,0 +1,108 @@
+package UI.sharedUI.book;
+
+import UI.Setting;
+import UI.Utility;
+import business.*;
+import business.exceptions.BookCopyException;
+import UI.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SearchBookPanel extends JPanel{
+
+    public static  SearchBookPanel INSTANCE = new SearchBookPanel();
+    // form elements
+    private final String[] bookAttributes = {"ISBN"};
+    private final JTextField[] bookFields = new JTextField[bookAttributes.length];
+
+    // Gui elements
+    private JTable myTable;
+    private JPanel searchBookPanel;
+
+    private ControllerInterface ci = new SystemController();
+
+    private SearchBookPanel() {
+        searchBookForm();
+        myTable = loadTableData();
+        searchBookPanel.add(new JScrollPane(myTable) , BorderLayout.AFTER_LAST_LINE);
+    }
+
+    private JTable loadTableData() {
+
+        String column[]={"ISBN","TITLE","NUMBER OF COPIES", "MEMBER NAME", "DUE DATE", };
+        DefaultTableModel model = new DefaultTableModel(null, column);
+        return new JTable(model);
+    }
+
+    public JTextField[] getBookFields() {
+        return bookFields;
+    }
+
+    private void searchBookForm() {
+
+        searchBookPanel = new JPanel(new BorderLayout());
+        JPanel addFormPanel = createsSearchBookForm();
+
+        // add add button
+        JButton addBookBtn = new JButton("Search");
+        addBookBtn.addActionListener(new searchBookListener());
+
+        addFormPanel.add(addBookBtn);
+        // add to book Panel at the bottom
+        searchBookPanel.add(addFormPanel, BorderLayout.CENTER);
+
+    }
+
+    public  JScrollPane getSearchBookPanel(){ return new JScrollPane(searchBookPanel); }
+
+    private JPanel getElementWithLabelBook(String labelName, int jtextFieldIndex) {
+
+        JLabel label = new JLabel(" " + labelName);
+        bookFields[jtextFieldIndex] = new JTextField(20);
+
+        JPanel nameForm = new JPanel();
+        nameForm.add(label, BorderLayout.NORTH);
+        nameForm.add(bookFields[jtextFieldIndex], BorderLayout.CENTER);
+
+        return nameForm;
+    }
+
+    private JPanel createsSearchBookForm() {
+
+        JPanel bookFormPanel = new JPanel();
+        for (int i = 0; i < bookFields.length; i++) {
+            bookFormPanel.add(getElementWithLabelBook(bookAttributes[i], i));
+        }
+        return bookFormPanel;
+    }
+
+    private void addRowToJTable(Book book){
+
+        DefaultTableModel model = (DefaultTableModel) myTable.getModel();
+        if(model.getRowCount() > 0)
+            model.setRowCount(0);
+        model.addRow(new  Object[]{book.getIsbn() , book.getTitle(), book.getAuthors().toString(), book.getMaxCheckoutLength(), book.getNumCopies()});
+
+    }
+
+    public void clearFormFields(){
+        for(JTextField field : bookFields){
+            field.setText("");
+        }
+
+    }
+
+    private class searchBookListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) throws NumberFormatException {
+
+        }
+    }
+
+}

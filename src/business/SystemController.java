@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import UI.AdminWindow;
+import business.Controllers.BookController;
 import business.exceptions.LibrarySystemException;
 import business.exceptions.LoginException;
 import dataaccess.Auth;
@@ -29,6 +31,7 @@ public class SystemController implements ControllerInterface {
 		}
 
 		currentAuth = map.get(id).getAuthorization();
+		openWindow();
 
 		System.out.println("Welcome " + id + ": role  = " + currentAuth);
 
@@ -82,4 +85,32 @@ public class SystemController implements ControllerInterface {
 		getBook(isbn).addBookCopy();
 	}
 
+	@Override
+	public HashMap<String, Book> getBooks() {
+
+		return da.readBooksMap();
+	}
+
+	@Override
+	public HashMap<String, LibraryMember> getMembers() {
+
+		return da.readMemberMap();
+	}
+
+	public void openWindow(){
+
+		if(currentAuth.name().equals("ADMIN")){
+			if(!AdminWindow.INSTANCE.isInitialized())
+				AdminWindow.INSTANCE.init();
+			AdminWindow.INSTANCE.setVisible(true);
+		}
+	}
+
+	@Override
+	public boolean addBook(String isbn , String title , int maxBorrowDays, List<Author> authors) throws BookCopyException {
+		Book book = new Book(isbn, title, maxBorrowDays, authors);
+		BookController bookController = new BookController();
+		bookController.addNewBook(book);
+		return true;
+	}
 }

@@ -3,8 +3,12 @@ package UI;
 import business.exceptions.LoginException;
 import business.SystemController;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
 
 public class LoginWindow extends JFrame implements LibWindow {
 
@@ -14,7 +18,7 @@ public class LoginWindow extends JFrame implements LibWindow {
     @Override
     public void init() {
 
-         this.setSize(520, 400);
+         this.setSize(720, 400);
          createMyGUI();
          add(mainPanel);
     }
@@ -29,7 +33,6 @@ public class LoginWindow extends JFrame implements LibWindow {
 
     JPanel jPBody;
     JPanel mainPanel;
-    JPanel jPButtonPanel;
 
     private JLabel jLTitle;
     JLabel jLUserName;
@@ -40,16 +43,31 @@ public class LoginWindow extends JFrame implements LibWindow {
 
     private LoginWindow() {UIController.INSTANCE.loginWindow = this;}
 
+    private Image requestImage() {
+        Image image = null;
+        try {
+            image = ImageIO.read(getClass().getResource("bgImage.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
     private void createMyGUI() {
 
-        mainPanel = new JPanel();
+        mainPanel = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(requestImage(), 0, 0,this.getWidth(), this.getHeight(),null);
+            }
+        };
+
         jLTitle = new JLabel();
         jPBody = new JPanel();
         jTFUserName = new JTextField();
         jTFPassword = new JPasswordField();
         jLUserName = new JLabel();
         jLPassword = new JLabel();
-        jPButtonPanel = new JPanel();
         jBLogin = new JButton();
 
         //this is the main panel
@@ -58,41 +76,44 @@ public class LoginWindow extends JFrame implements LibWindow {
         mainPanel.setLayout(null);
 
         jLTitle.setText("Library Management System");
-        jLTitle.setForeground(Color.orange);
-        mainPanel.add(jLTitle);
-        jLTitle.setBounds(170, 20, 300, 40);
+        jLTitle.setFont(new java.awt.Font("SansSerif", 1, 18));
+        jLTitle.setForeground(new java.awt.Color(170, 98, 0));
+       // mainPanel.add(jLTitle);
+        jLTitle.setBounds(80, 15, 300, 30);
 
         jPBody.setLayout(null);
-        jPBody.add(jTFUserName);
-        jTFUserName.setBounds(10, 50, 210, 25);
-
-        jPBody.add(jTFPassword);
-        jTFPassword.setBounds(10, 130, 210, 25);
+        jPBody.add(jLTitle);
 
         //username
         jLUserName.setText("Username");
         jPBody.add(jLUserName);
-        jLUserName.setBounds(20, 20, 70, 30);
+        jLUserName.setBounds(105, 60, 70, 30);
+
+        jPBody.add(jTFUserName);
+        jTFUserName.setBounds(100, 85, 210, 25);
 
         //password
         jLPassword.setText("Password");
         jPBody.add(jLPassword);
-        jLPassword.setBounds(20, 104, 60, 20);
+        jLPassword.setBounds(105, 110, 60, 30);
 
-
+        jPBody.add(jTFPassword);
+        jTFPassword.setBounds(100, 135, 210, 25);
         //login button
-        BorderLayout bl = new BorderLayout();
 
-        jPButtonPanel.setLayout(bl);
         jBLogin.setText("Login");
+        jBLogin.setBackground(new java.awt.Color(170, 98, 0));
+        jBLogin.setOpaque(true);
+        jBLogin.setBorderPainted(false);
+        jBLogin.setFocusPainted(false);
 
         jPBody.add(jBLogin);
-        jBLogin.setBounds(80, 170, 100, 40);
+        jBLogin.setBounds(150, 190, 100, 40);
         addLoginButtonListener(jBLogin);
 
 
         mainPanel.add(jPBody);
-        jPBody.setBounds(150, 70, 230, 230);
+        jPBody.setBounds(150, 70, 400, 260);
 
         getContentPane().add(mainPanel);
         mainPanel.setBounds(0, 0, 800, 400);
