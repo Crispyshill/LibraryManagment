@@ -14,5 +14,6 @@ public interface ControllerInterface {
 	HashMap<String, Book> getBooks();
 	HashMap<String, LibraryMember> getMembers();
 
-	boolean addBook(String isbn, String  title, int maxBorrowDays, List<Author> authors) throws BookCopyException;
+	public void addCopy(String isbn) throws BookCopyException;
+	public void addBook(String isbn, String title, int maxCheckoutLength, List<Author> authors);
 }
