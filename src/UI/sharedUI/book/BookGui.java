@@ -128,7 +128,33 @@ public class BookGui extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
 
+            try {
 
+                // apply Ruleset
+
+                String title = bookFields[0].getText().trim();
+                String isbn = bookFields[1].getText().trim();
+                String authorNames = bookFields[3].getText().trim();
+
+                int maxBorrowDays = Integer.parseInt(bookFields[2].getText());
+                Author author = new Author(authorNames, "L.", "12212" , new Address("1000 N. 4th st.", "Fairfield", "IA", "52557"), "Student");
+                List<Author> authors = new ArrayList<Author>();
+                authors.add(author);
+                ci.addBook(isbn, title, maxBorrowDays, (ArrayList<Author>) authors);
+
+                // Now display success message
+//                new Messages.InnerFrame().showMessage("New book added successfully","Info");
+                System.out.println("New book added successfully");
+                addRowToJTable( isbn, title, maxBorrowDays, authors.toString());
+                clearFormFields();
+
+            } catch (BookCopyException  ex) {
+//                new Messages.InnerFrame().showMessage(ex.getMessage(), "Error");
+                System.out.println("Error");
+            }catch (NumberFormatException ex){
+//                new Messages.InnerFrame().showMessage("Input for Max days should be a number", "Error");
+                System.out.println("Input for Max days should be a number");
+            }
 
         }
     }

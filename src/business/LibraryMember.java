@@ -2,6 +2,9 @@ package business;
 /*
  * LibraryMember class 
  */
+import business.Controllers.BookController;
+import business.exceptions.BookCopyException;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -51,6 +54,8 @@ final public class LibraryMember extends Person implements Serializable {
 		return "Member Info: " + "ID: " + memberId + ", name: " + getFirstName() + " " + getLastName() + 
 				", " + getTelephone() + " " + getAddress() + record.toString();
 	}
+
+
 
 	private static final long serialVersionUID = -2226197306790714013L;
 }

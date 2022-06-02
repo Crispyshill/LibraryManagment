@@ -1,4 +1,5 @@
 package business;
+import business.exceptions.BookCopyException;
 import business.exceptions.LoginException;
 
 import java.util.HashMap;
@@ -12,4 +13,6 @@ public interface ControllerInterface {
 
 	HashMap<String, Book> getBooks();
 	HashMap<String, LibraryMember> getMembers();
+
+	boolean addBook(String isbn, String  title, int maxBorrowDays, List<Author> authors) throws BookCopyException;
 }
