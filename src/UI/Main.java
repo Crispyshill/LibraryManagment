@@ -2,20 +2,18 @@ package UI;
 
 import javax.swing.JFrame;
 
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Toolkit;
+import java.awt.*;
 
 public class Main {
 
 	public static void main(String[] args) {
 	      EventQueue.invokeLater(() -> 
 	         {
-	            LoginWindow.INSTANCE.setTitle("LMS");
-				LoginWindow.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				LoginWindow.INSTANCE.init();
-	            centerFrameOnDesktop(LoginWindow.INSTANCE);
-				LoginWindow.INSTANCE.setVisible(true);
+				 AdminWindow.INSTANCE.setTitle("Library Management System");
+				 AdminWindow.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				 AdminWindow.INSTANCE.init();
+	             centerFrameOnDesktop(AdminWindow.INSTANCE);
+				 AdminWindow.INSTANCE.setVisible(true);
 	         });
 	   }
 	   public static void centerFrameOnDesktop(Component f) {

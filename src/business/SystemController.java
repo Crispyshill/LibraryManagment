@@ -67,4 +67,15 @@ public class SystemController implements ControllerInterface {
 		return new BookCopy[]{};
 	}
 
+	@Override
+	public HashMap<String, Book> getBooks() {
+
+		return da.readBooksMap();
+	}
+
+	@Override
+	public HashMap<String, LibraryMember> getMembers() {
+
+		return da.readMemberMap();
+	}
 }
