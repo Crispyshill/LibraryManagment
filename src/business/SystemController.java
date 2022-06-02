@@ -106,11 +106,17 @@ public class SystemController implements ControllerInterface {
 		}
 	}
 
-	@Override
-	public boolean addBook(String isbn , String title , int maxBorrowDays, List<Author> authors) throws BookCopyException {
-		Book book = new Book(isbn, title, maxBorrowDays, authors);
+//	@Override
+//	public boolean addBook(String isbn , String title , int maxBorrowDays, List<Author> authors) throws BookCopyException {
+//		Book book = new Book(isbn, title, maxBorrowDays, authors);
+//		BookController bookController = new BookController();
+//		bookController.addNewBook(book);
+//		return true;
+//	}
+
+	public void saveBook(Book book){
 		BookController bookController = new BookController();
 		bookController.addNewBook(book);
-		return true;
 	}
+
 }

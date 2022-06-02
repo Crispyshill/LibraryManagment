@@ -87,7 +87,33 @@ public class AddBookCopyPanel extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
 
+            try {
 
+//                RuleSet searchRuleset = RuleSetFactory.getRuleSet(AddBookCopyPanel.this);
+//                searchRuleset.applyRules(AddBookCopyPanel.this);
+
+                String isbn = bookFields[0].getText().trim();
+
+                // check if member already exists
+                if(!ci.allBookIds().contains(isbn))
+                    throw new BookCopyException("No book with ISBN  =  " + isbn + " found");
+                Book book = ci.getBooks().get(isbn);
+
+                if(book == null)
+                    throw new BookCopyException("Unable to load book details");
+
+                // add copy
+                book.addBookCopy();
+
+                // update book
+                ci.saveBook(book);
+//                new Messages.InnerFrame().showMessage(  "1 Copy added successfully ", "Info");
+                System.out.println("1 Copy added successfully ");
+
+            } catch (BookCopyException | NumberFormatException ex) {
+               // new Messages.InnerFrame().showMessage(ex.getMessage(), "Error");
+                System.out.println(ex.getMessage());
+            }
 
         }
     }

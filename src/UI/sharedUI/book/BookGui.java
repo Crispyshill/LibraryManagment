@@ -5,6 +5,7 @@ import UI.Utility;
 import UI.sharedUI.UtilGui;
 import business.*;
 import business.exceptions.BookCopyException;
+import business.exceptions.LibrarySystemException;
 
 
 import javax.swing.*;
@@ -146,12 +147,13 @@ public class BookGui extends JPanel{
 //                new Messages.InnerFrame().showMessage("New book added successfully","Info");
                 System.out.println("New book added successfully");
                 addRowToJTable( isbn, title, maxBorrowDays, authors.toString());
+
                 clearFormFields();
 
-            } catch (BookCopyException  ex) {
-//                new Messages.InnerFrame().showMessage(ex.getMessage(), "Error");
-                System.out.println("Error");
-            }catch (NumberFormatException ex){
+//            } catch (LibrarySystemException ex) {
+////                new Messages.InnerFrame().showMessage(ex.getMessage(), "Error");
+//                System.out.println("Error");
+            } catch (NumberFormatException ex){
 //                new Messages.InnerFrame().showMessage("Input for Max days should be a number", "Error");
                 System.out.println("Input for Max days should be a number");
             }
