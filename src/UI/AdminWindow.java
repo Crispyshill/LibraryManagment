@@ -57,13 +57,13 @@ public class AdminWindow extends JFrame implements LibWindow {
         // Construct sideBarMenu ListItems
         constructSideBarMenu();
 
-        // Create sidebar
+        // Create sidebar -- render
         createLinkLabels();
 
         // create main panels
         createMainPanels();
 
-        // link my sidebar
+        // link my sidebar -- menu ite with action
         linkList.addListSelectionListener(event -> {
             String value = linkList.getSelectedValue().getItemName();
             boolean allowed = linkList.getSelectedValue().highlight();
@@ -75,6 +75,7 @@ public class AdminWindow extends JFrame implements LibWindow {
                 linkList.getSelectedValue().setHighlight(true);
                 System.out.println("pick first");
             }
+
             cl.show(cards, value);
         });
 
@@ -202,18 +203,6 @@ public class AdminWindow extends JFrame implements LibWindow {
 
         checkOutPanel.add(title,BorderLayout.NORTH);
         checkOutPanel.add(tp , BorderLayout.CENTER);
-
-//        JTabbedPane tp = new JTabbedPane();
-//        JPanel addMemberPanel = MemberUI.INSTANCE.getAddMemberPanel();
-//        tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
-//
-//        tp.add("View Members",new JScrollPane(memberListJTable));
-//        tp.add("Add Member", addMemberPanel);
-//
-//        tp.setFont(Setting.DEFUALT_FONT);
-//        tp.setForeground(Setting.LINK_AVAILABLE);
-//        tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-
 
     }
     @Override

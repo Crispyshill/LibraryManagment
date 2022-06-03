@@ -20,6 +20,7 @@ public class BookUI extends JPanel{
     private JTextField[] bookFields = new JTextField[bookAttributes.length];
 
     private JPanel addBookPanel;
+
     public static BookUI INSTANCE = new BookUI();
     private JTable myTable;
 

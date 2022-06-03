@@ -9,7 +9,6 @@ public class Setting {
     public static final int APP_HEIGHT = 600;
     public static final int DIVIDER = 200;
     public static  final Font DEFUALT_FONT = new Font("Tahoma", 1, 13);
-
     public static final Color DARK_BLUE = Color.BLACK.darker();
 
     public static final Color ERROR_MESSAGE_COLOR = Color.RED.darker();
@@ -35,7 +34,6 @@ public class Setting {
             "Checkout",
             "Logout",
     };
-
 
     private static LibWindow[] allWindows = {
             AdminWindow.INSTANCE,
