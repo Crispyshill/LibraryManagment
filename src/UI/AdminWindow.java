@@ -41,7 +41,7 @@ public class AdminWindow extends JFrame implements LibWindow {
         UIController.INSTANCE.adminWindow = this;
 
         memberListJTable = MemberUI.INSTANCE.getMemberList();
-        bookListJTable = BookUI.INSTANCE.getBookList();
+        bookListJTable = BookUI.INSTANCE.refreshBookList();
         addBookPane = BookUI.INSTANCE.getAddBookPanel();
         addBookCopyPane = AddBookCopyPanel.INSTANCE.getAddBookCopyPanel();
         searchBookPane = SearchBookPanel.INSTANCE.getSearchBookPanel();
@@ -145,8 +145,8 @@ public class AdminWindow extends JFrame implements LibWindow {
         tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         ChangeListener changeListener = new ChangeListener() {
             public void stateChanged(ChangeEvent changeEvent) {
-                bookListJTable = BookUI.INSTANCE.getBookList();
-                bookListJTable.invalidate();
+//                bookListJTable =
+                bookListJTable.repaint();
                 System.out.println("upload data");
             }
         };

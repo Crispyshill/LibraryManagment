@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import UI.AdminWindow;
+import UI.Setting;
 import business.Controllers.BookController;
 import business.Controllers.BookCopyController;
 import business.exceptions.BookCopyException;
@@ -77,12 +78,12 @@ public class SystemController implements ControllerInterface {
 
 	public void addCopy(String isbn) throws BookCopyException {
 		BookCopyController bcc = new BookCopyController();
-		bcc.addNewBookCopy(isbn);
+		bcc.addNewBookCopy(isbn,da);
 	}
 
 	@Override
 	public HashMap<String, Book> getBooks() {
-
+		//System.out.println(da.readBooksMap().values());
 		return da.readBooksMap();
 	}
 
@@ -92,7 +93,7 @@ public class SystemController implements ControllerInterface {
 	}
 
 	public void openWindow(){
-
+		Setting.hideAllWindows();
 		if(currentAuth.name().equals("ADMIN")){
 			if(!AdminWindow.INSTANCE.isInitialized())
 				AdminWindow.INSTANCE.init();

@@ -88,6 +88,8 @@ public class AddBookCopyPanel extends JPanel{
                 book.addBookCopy();
                 ci.saveBook(book);
 
+                BookUI.INSTANCE.refreshBookList();
+
                 System.out.println("1 Copy added successfully ");
                 clearFormFields();
 

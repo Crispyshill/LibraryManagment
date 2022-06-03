@@ -20,13 +20,13 @@ public class BookCopyController {
         }
     }
 
-    public void addNewBookCopy(String book_isbn) {
-
-        DataAccessFacade da = new DataAccessFacade();
-        HashMap bookMap = da.readBooksMap();
-        Book book = (Book) bookMap.get(book_isbn);
-        book.addBookCopy();
-
-    }
+//    public void addNewBookCopy(String book_isbn) {
+//
+//        DataAccessFacade da = new DataAccessFacade();
+//        HashMap bookMap = da.readBooksMap();
+//        Book book = (Book) bookMap.get(book_isbn);
+//        book.addBookCopy();
+//
+//    }
 
 }
