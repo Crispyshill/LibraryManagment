@@ -75,9 +75,11 @@ public class SystemController implements ControllerInterface {
 		return b.getCopies();
 	}
 
+
+
 	public void addCopy(String isbn) throws BookCopyException {
 		BookCopyController bcc = new BookCopyController();
-		bcc.addNewBookCopy(isbn);
+		bcc.addNewBookCopy(isbn, da);
 	}
 
 	@Override
@@ -109,7 +111,7 @@ public class SystemController implements ControllerInterface {
 
 	public void saveBook(Book book){
 		BookController bookController = new BookController();
-		bookController.addNewBook(book);
+		bookController.addNewBook(book, da);
 	}
 
 	public Address addAddress(String street, String city , String state , String zip){
@@ -117,7 +119,8 @@ public class SystemController implements ControllerInterface {
 	}
 
 	public void saveLibraryMember(LibraryMember member){
-		da.saveNewMember(member);
+		MemberController mc = new MemberController;
+    mc.addNewMember(member, da);
 	}
 
 	@Override
@@ -129,5 +132,6 @@ public class SystemController implements ControllerInterface {
 		if(!allMemberIds().contains(member_id.trim()))
 			return false;
 		return true;
+
 	}
 }
