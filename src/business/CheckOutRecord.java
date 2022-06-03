@@ -17,6 +17,7 @@ final public class CheckOutRecord implements Serializable {
     private static final long serialVersionUID = 1558162789779372371L;
     private List<CheckOutEntry> entries;
 
+    //add person
     public CheckOutRecord(){
         entries = new ArrayList<>();
     }

@@ -50,6 +50,8 @@ public class BookUI extends JPanel{
         }
 
         DefaultTableModel model = new DefaultTableModel(bookData, column);
+        model.fireTableDataChanged();
+        this.repaint();
         return new JTable(model);
     }
     public JTextField[] getBookFields() {
@@ -100,10 +102,18 @@ public class BookUI extends JPanel{
         return nameForm;
     }
 
-    public  JTable getBookList() {
+    public  JTable refreshBookList() {
+//        myTable = loadTableData();
+        myTable.repaint();
+//        DefaultTableModel model = new DefaultTableModel(myTable);
+//        model.fireTableDataChanged();
+
         myTable = loadTableData();
+        myTable.setDefaultEditor(Object.class , null);
+
         return this.myTable;
     }
+
 
     private JPanel createAddBookForm() {
 

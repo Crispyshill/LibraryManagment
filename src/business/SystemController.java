@@ -7,6 +7,7 @@ import java.util.List;
 import UI.AdminWindow;
 import business.Controllers.BookController;
 import business.Controllers.BookCopyController;
+import business.Controllers.MemberController;
 import business.exceptions.BookCopyException;
 import business.exceptions.LibrarySystemException;
 import business.exceptions.LoginException;
@@ -119,7 +120,7 @@ public class SystemController implements ControllerInterface {
 	}
 
 	public void saveLibraryMember(LibraryMember member){
-		MemberController mc = new MemberController;
+		MemberController mc = new MemberController();
     mc.addNewMember(member, da);
 	}
 

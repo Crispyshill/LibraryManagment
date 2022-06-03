@@ -26,15 +26,6 @@ final public class Book implements Serializable {
 		this.authors = Collections.unmodifiableList(authors);
 		copies = new BookCopy[]{new BookCopy(this, 1, true)};
 	}
-	public void updateCopies(BookCopy copy) {
-		for(int i = 0; i < copies.length; ++i) {
-			BookCopy c = copies[i];
-			if(c.equals(copy)) {
-				copies[i] = copy;
-				
-			}
-		}
-	}
 
 	public List<Integer> getCopyNums() {
 		List<Integer> retVal = new ArrayList<>();
@@ -42,7 +33,6 @@ final public class Book implements Serializable {
 			retVal.add(c.getCopyNum());
 		}
 		return retVal;
-		
 	}
 	
 	public void addBookCopy() {
