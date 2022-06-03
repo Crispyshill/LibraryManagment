@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import UI.AdminWindow;
-import UI.Setting;
 import business.Controllers.BookController;
 import business.Controllers.BookCopyController;
+import business.Controllers.MemberController;
 import business.exceptions.BookCopyException;
 import business.exceptions.LibrarySystemException;
 import business.exceptions.LoginException;
@@ -76,14 +76,16 @@ public class SystemController implements ControllerInterface {
 		return b.getCopies();
 	}
 
+
+
 	public void addCopy(String isbn) throws BookCopyException {
 		BookCopyController bcc = new BookCopyController();
-		bcc.addNewBookCopy(isbn,da);
+		bcc.addNewBookCopy(isbn, da);
 	}
 
 	@Override
 	public HashMap<String, Book> getBooks() {
-		//System.out.println(da.readBooksMap().values());
+
 		return da.readBooksMap();
 	}
 
@@ -93,7 +95,7 @@ public class SystemController implements ControllerInterface {
 	}
 
 	public void openWindow(){
-		Setting.hideAllWindows();
+
 		if(currentAuth.name().equals("ADMIN")){
 			if(!AdminWindow.INSTANCE.isInitialized())
 				AdminWindow.INSTANCE.init();
@@ -110,7 +112,7 @@ public class SystemController implements ControllerInterface {
 
 	public void saveBook(Book book){
 		BookController bookController = new BookController();
-		bookController.addNewBook(book);
+		bookController.addNewBook(book, da);
 	}
 
 	public Address addAddress(String street, String city , String state , String zip){
@@ -118,7 +120,8 @@ public class SystemController implements ControllerInterface {
 	}
 
 	public void saveLibraryMember(LibraryMember member){
-		da.saveNewMember(member);
+		MemberController mc = new MemberController();
+    mc.addNewMember(member, da);
 	}
 
 	@Override
@@ -130,5 +133,6 @@ public class SystemController implements ControllerInterface {
 		if(!allMemberIds().contains(member_id.trim()))
 			return false;
 		return true;
+
 	}
 }

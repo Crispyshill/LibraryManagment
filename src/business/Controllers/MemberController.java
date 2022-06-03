@@ -13,6 +13,8 @@ import java.util.List;
 public class MemberController {
 
     //operation related to members
+
+
     public void addNewMember(LibraryMember member, DataAccess dataAccessFacade) {
         dataAccessFacade.saveNewMember(member);
     }
