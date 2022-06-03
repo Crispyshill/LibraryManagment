@@ -1,8 +1,12 @@
 package UI.sharedUI;
 
+import UI.AdminWindow;
+import UI.LoginWindow;
+import UI.Setting;
 import UI.UIController;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,16 +18,22 @@ public class Logout {
     private Logout() {
 
         JButton logoutBtn = new JButton("Log out");
-
-        //logoutBtn.setPreferredSize(new Dimension(20, 30));
         logoutBtn.setBounds(120, 120, 100, 40);
         logoutBtn.addActionListener(new LogoutListener());
-        JLabel prompt  = new JLabel("Are you sure you want to logout ?");
-        prompt.setBounds(185, 180, 200, 20);
+        JLabel prompt  = new JLabel("Are you sure you want to logout?");
+        prompt.setFont(new java.awt.Font("SansSerif", 1, 18));
+        prompt.setForeground(new java.awt.Color(170, 98, 0));
+        prompt.setBounds(130, 180, 500, 20);
+
         JPanel btnPanel = new JPanel();
         btnPanel.setLayout(null);
         btnPanel.setBounds(110,110 , 300, 300);
-        
+
+        logoutBtn.setBackground(new java.awt.Color(170, 98, 0));
+        logoutBtn.setOpaque(true);
+        logoutBtn.setBorderPainted(false);
+        logoutBtn.setFocusPainted(false);
+
         btnPanel.add(logoutBtn);//, BorderLayout.CENTER);
 
         logoutPanel = new JPanel();
@@ -36,11 +46,29 @@ public class Logout {
     public JPanel getLoginPanel(){return logoutPanel;};
 
     private class LogoutListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
-          UtilGui.hideAllWindows();
-            UIController.INSTANCE.loginWindow.setVisible(true);
+            Setting.hideAllWindows();
+
+            EventQueue.invokeLater(() ->
+            {
+                LoginWindow.INSTANCE.setTitle("Library Management System");
+                LoginWindow.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                if(!LoginWindow.INSTANCE.isInitialized())
+                    LoginWindow.INSTANCE.init();
+                centerFrameOnDesktop(LoginWindow.INSTANCE);
+                LoginWindow.INSTANCE.setVisible(true);
+            });
         }
     }
+
+    public static void centerFrameOnDesktop(Component f) {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        int height = toolkit.getScreenSize().height;
+        int width = toolkit.getScreenSize().width;
+        int frameHeight = f.getSize().height;
+        int frameWidth = f.getSize().width;
+        f.setLocation(((width - frameWidth) / 2), (height - frameHeight) / 3);
+    }
+
 }

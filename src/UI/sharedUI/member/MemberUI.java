@@ -1,12 +1,11 @@
 package UI.sharedUI.member;
 
 import UI.Setting;
-import UI.Utility;
-import UI.sharedUI.UtilGui;
 import business.Address;
 import business.ControllerInterface;
 import business.LibraryMember;
 import business.SystemController;
+import business.exceptions.LibraryMemberException;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -27,7 +26,7 @@ public class MemberUI extends JPanel{
     private JPanel addMemberPanel;
 
     private MemberUI() {
-        memeberAttributes = new String[] {"Member ID", "First Name", "Last Name", "Phone Number", "Street", "City", "State", "Zip"};
+        memeberAttributes = new String[] {"Member ID", "First Name", "Last Name",  "Street", "City", "State", "Zip", "Phone Number"};
         memberFields = new JTextField[memeberAttributes.length];
         addMemberForm();
         myTable = loadDataToTable();
@@ -42,34 +41,23 @@ public class MemberUI extends JPanel{
     }
 
     private void addMemberForm() {
-
-        JLabel panelTitle = new JLabel(" Add Member");
-        panelTitle.setFont(Setting.DEFUALT_FONT);
-        panelTitle.setForeground(Utility.DARK_BLUE);
-
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        titlePanel.add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.NORTH);
-        titlePanel.add(panelTitle, BorderLayout.CENTER);
-        titlePanel.add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.SOUTH);
-
         JPanel memberFormPanel = createMemberForm();
 
         // add add button
         JButton addBMemberBtn = new JButton("Add Member");
 
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        addBMemberBtn.setPreferredSize(UtilGui.BTN_DIMENSION);
+        addBMemberBtn.setPreferredSize(Setting.BTN_DIMENSION);
         addBMemberBtn.addActionListener(new addMemberListener());
         btnPanel.add(addBMemberBtn);
 
         JPanel container = new JPanel(new BorderLayout());
-        container.setPreferredSize(UtilGui.PANEL_DIMENSION);
+        container.setPreferredSize(Setting.PANEL_DIMENSION);
 
         // combine
-        container.add(titlePanel, BorderLayout.NORTH);
+        container.add(new JScrollPane());
         container.add(memberFormPanel, BorderLayout.CENTER);
         container.add(btnPanel, BorderLayout.SOUTH);
-
 
         this.add(container);
     }
@@ -128,7 +116,25 @@ public class MemberUI extends JPanel{
     private class addMemberListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            try {
 
+                if(ci.checkMemberId(memberFields[0].getText().trim()))
+                    throw new LibraryMemberException("Member with  Id = " + memberFields[0].getText().trim() + " already exists");
+
+                Address add = ci.addAddress(memberFields[4].getText(), memberFields[5].getText().trim(), memberFields[6].getText().trim(), memberFields[7].getText().trim());
+                LibraryMember member = ci.addLibraryMember(memberFields[0].getText(), memberFields[1].getText(),
+                        memberFields[2].getText(), memberFields[3].getText(), add);
+
+                // Add New instance
+                ci.saveLibraryMember(member);
+                System.out.println("Member added successfully");
+
+                addRowToJTable(member);
+                clearFormFields();
+
+            } catch (LibraryMemberException  ex) {
+                System.out.println(ex);
+            }
         }
     }
 

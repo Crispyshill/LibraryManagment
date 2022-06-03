@@ -17,5 +17,8 @@ public class BookController {
         dataAccessFacade.saveNewBook(book);
     }
 
-
+    public void addNewBook(Book book) {
+        DataAccessFacade da = new DataAccessFacade();
+        da.saveNewBook(book);
+    }
 }

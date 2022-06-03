@@ -16,7 +16,6 @@ import dataaccess.DataAccessFacade;
 import dataaccess.User;
 
 public class SystemController implements ControllerInterface {
-
 	public static Auth currentAuth = null;
 	private DataAccess da = new DataAccessFacade();
 
@@ -36,7 +35,6 @@ public class SystemController implements ControllerInterface {
 		openWindow();
 
 		System.out.println("Welcome " + id + ": role  = " + currentAuth);
-
 	}
 	@Override
 	public List<String> allMemberIds() {
@@ -53,7 +51,7 @@ public class SystemController implements ControllerInterface {
 		}
 		return overDueBooks;
 	}
-	
+
 	@Override
 	public List<String> allBookIds() {
 		
@@ -73,10 +71,10 @@ public class SystemController implements ControllerInterface {
 		throw new LibrarySystemException("ISBN searched for does not exist");
 	}
 	public BookCopy[] getBookCopies(String ISBN) throws LibrarySystemException{
-
 		Book b = getBook(ISBN);
 		return b.getCopies();
 	}
+
 
 
 	public void addCopy(String isbn) throws BookCopyException {
@@ -92,7 +90,6 @@ public class SystemController implements ControllerInterface {
 
 	@Override
 	public HashMap<String, LibraryMember> getMembers() {
-
 		return da.readMemberMap();
 	}
 
@@ -110,5 +107,31 @@ public class SystemController implements ControllerInterface {
 		Book book = new Book(isbn, title, maxBorrowDays, authors);
 		BookController bookController = new BookController();
 		bookController.addNewBook(book, da);
+	}
+
+	public void saveBook(Book book){
+		BookController bookController = new BookController();
+		bookController.addNewBook(book, da);
+	}
+
+	public Address addAddress(String street, String city , String state , String zip){
+		return new Address(street, city, state, zip);
+	}
+
+	public void saveLibraryMember(LibraryMember member){
+		MemberController mc = new MemberController;
+    mc.addNewMember(member, da);
+	}
+
+	@Override
+	public LibraryMember addLibraryMember(String memberNumber, String firstName, String lastName, String phoneNumber, Address address) {
+		return new LibraryMember(memberNumber, firstName, lastName, phoneNumber, address);
+	}
+
+	public boolean checkMemberId(String member_id){
+		if(!allMemberIds().contains(member_id.trim()))
+			return false;
+		return true;
+
 	}
 }
