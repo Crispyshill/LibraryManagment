@@ -15,8 +15,11 @@ public class MemberController {
     //operation related to members
 
 
-    public void addNewMember(LibraryMember member, DataAccess dataAccessFacade) {
-        dataAccessFacade.saveNewMember(member);
+    public void addNewMember(LibraryMember member, DataAccess dataAccess) {
+        dataAccess.saveNewMember(member);
     }
 
+    public LibraryMember getLibraryMember(String memberId, DataAccess dataAccess){
+        return dataAccess.readMemberMap().get(memberId);
+    }
 }

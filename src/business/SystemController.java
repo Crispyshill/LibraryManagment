@@ -9,6 +9,7 @@ import business.Controllers.BookController;
 import business.Controllers.BookCopyController;
 import business.Controllers.MemberController;
 import business.exceptions.BookCopyException;
+import business.exceptions.CheckOutException;
 import business.exceptions.LibrarySystemException;
 import business.exceptions.LoginException;
 import dataaccess.Auth;
@@ -18,7 +19,11 @@ import dataaccess.User;
 
 public class SystemController implements ControllerInterface {
 	public static Auth currentAuth = null;
-	private DataAccess da = new DataAccessFacade();
+	private DataAccess da;
+
+	public SystemController(){
+		da = new DataAccessFacade();
+	}
 
 	public void login(String id, String password) throws LoginException {
 
@@ -134,5 +139,26 @@ public class SystemController implements ControllerInterface {
 			return false;
 		return true;
 
+	}
+
+	public LibraryMember getLibraryMember(String memberId){
+		MemberController mc = new MemberController();
+		return mc.getLibraryMember(memberId, da);
+	}
+
+	public void checkOutBook(String memberId, String isbn) throws LibrarySystemException, CheckOutException {
+		BookCopy availableCopy = null;
+		for(BookCopy c : getBook(isbn).getCopies()){
+			if(c.isAvailable()){
+				availableCopy = c;
+				break;
+			}
+			if(availableCopy.equals(null)){
+				throw new CheckOutException("No available copies of specified book");
+			}
+		}
+		getMembers().get(memberId).addCheckoutRecord(availableCopy);
+		List<CheckOutEntry> memberEntries = getMembers().get(memberId).getRecord().getEntries();
+		availableCopy.checkedOut(memberEntries.get(memberEntries.size()-1));
 	}
 }
