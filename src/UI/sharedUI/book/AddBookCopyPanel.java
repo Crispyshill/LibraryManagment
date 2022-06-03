@@ -1,25 +1,16 @@
 package UI.sharedUI.book;
 
-import UI.Setting;
-import UI.Utility;
 import business.*;
 import business.exceptions.BookCopyException;
-import business.exceptions.LibraryMemberException;
-import UI.*;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class AddBookCopyPanel extends JPanel{
-
-
     public static  AddBookCopyPanel INSTANCE = new AddBookCopyPanel();
-
-
     // form elements
     private final String[] bookAttributes = {"ISBN"};
     private final JTextField[] bookFields = new JTextField[bookAttributes.length];
@@ -43,14 +34,12 @@ public class AddBookCopyPanel extends JPanel{
 
         JPanel addFormPanel = createsSearchBookForm();
 
-        //A button
         JButton addBookBtn = new JButton("Add copy");
         addBookBtn.addActionListener(new AddBookCopyListener());
 
         addFormPanel.add(addBookBtn);
-        // add to book Panel at the bottom
-        AddBookCopyPanel.add(addFormPanel, BorderLayout.CENTER);
 
+        AddBookCopyPanel.add(addFormPanel, BorderLayout.CENTER);
     }
 
     public  JScrollPane getAddBookCopyPanel(){ return new JScrollPane(AddBookCopyPanel); }
@@ -83,18 +72,12 @@ public class AddBookCopyPanel extends JPanel{
     }
 
     private class AddBookCopyListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
 
             try {
-
-//                RuleSet searchRuleset = RuleSetFactory.getRuleSet(AddBookCopyPanel.this);
-//                searchRuleset.applyRules(AddBookCopyPanel.this);
-
                 String isbn = bookFields[0].getText().trim();
 
-                // check if member already exists
                 if(!ci.allBookIds().contains(isbn))
                     throw new BookCopyException("No book with ISBN  =  " + isbn + " found");
                 Book book = ci.getBooks().get(isbn);
@@ -102,16 +85,13 @@ public class AddBookCopyPanel extends JPanel{
                 if(book == null)
                     throw new BookCopyException("Unable to load book details");
 
-                // add copy
                 book.addBookCopy();
-
-                // update book
                 ci.saveBook(book);
-//                new Messages.InnerFrame().showMessage(  "1 Copy added successfully ", "Info");
+
                 System.out.println("1 Copy added successfully ");
+                clearFormFields();
 
             } catch (BookCopyException | NumberFormatException ex) {
-               // new Messages.InnerFrame().showMessage(ex.getMessage(), "Error");
                 System.out.println(ex.getMessage());
             }
 

@@ -1,8 +1,8 @@
-package UI;
+package UI.sharedUI.book;
+
 import UI.Setting;
-import UI.Utility;
-import UI.sharedUI.UtilGui;
 import business.*;
+import business.exceptions.BookCopyException;
 
 
 import javax.swing.*;
@@ -14,18 +14,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class BookGuii extends JPanel{
+public class BookUI extends JPanel{
 
     private String[] bookAttributes = {"Title", "ISBN", "Max days" , "Authors"};
     private JTextField[] bookFields = new JTextField[bookAttributes.length];
 
     private JPanel addBookPanel;
-    public static  BookGuii INSTANCE = new BookGuii();
+    public static BookUI INSTANCE = new BookUI();
     private JTable myTable;
 
     private ControllerInterface ci = new SystemController();
 
-    private BookGuii() {
+    private BookUI() {
         addBookForm();
         myTable = loadTableData();
         myTable.setDefaultEditor(Object.class , null);
@@ -56,40 +56,31 @@ public class BookGuii extends JPanel{
     }
 
     private void addBookForm() {
-
-        JLabel panelTitle = new JLabel(" Add New Book");
-        panelTitle.setFont(Setting.DEFUALT_FONT);
-        panelTitle.setForeground(Utility.DARK_BLUE);
-
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        titlePanel.add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.NORTH);
-        titlePanel.add(panelTitle, BorderLayout.CENTER);
-        titlePanel.add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.SOUTH);
-
         JPanel addFormPanel = createAddBookForm();
 
-        // add add button
+        //add add button
         JButton addBBookBtn = new JButton("Add Book");
-        addBBookBtn.setPreferredSize(UtilGui.BTN_DIMENSION);
+        addBBookBtn.setPreferredSize(Setting.BTN_DIMENSION);
+
         addBBookBtn.addActionListener(new addBookListiner());
-        JPanel addBookBtnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel addBookBtnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 40));
         addBookBtnPanel.add(addBBookBtn);
 
 
         JPanel container = new JPanel(new BorderLayout());
-        container.setPreferredSize(UtilGui.PANEL_DIMENSION);
+        container.setPreferredSize(Setting.PANEL_DIMENSION);
 
-        // combine
-        container.add(titlePanel, BorderLayout.NORTH);
         container.add(new JScrollPane());
         container.add(addFormPanel, BorderLayout.CENTER);
         container.add(addBookBtnPanel, BorderLayout.SOUTH);
+
+        addBookPanel = container;
 
         // add this to the current
         this.add(container);
     }
 
-    public  JPanel getAddBookPanel(){ return this; }
+    public  JScrollPane getAddBookPanel(){ return new JScrollPane(this); }
 
     private JPanel getElementWithLabelBook(String labelName, int jtextFieldIndex) {
 
@@ -109,12 +100,14 @@ public class BookGuii extends JPanel{
     }
 
     public  JTable getBookList() {
+        myTable = loadTableData();
         return this.myTable;
     }
 
     private JPanel createAddBookForm() {
 
         JPanel bookFormPanel = new JPanel(new GridLayout(bookAttributes.length, 0));
+
         for (int i = 0; i < bookFields.length; i++) {
             bookFormPanel.add(getElementWithLabelBook(bookAttributes[i], i));
         }
@@ -133,6 +126,30 @@ public class BookGuii extends JPanel{
 
         @Override
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
+
+            try {
+
+                String title = bookFields[0].getText().trim();
+                String isbn = bookFields[1].getText().trim();
+                String authorNames = bookFields[3].getText().trim();
+
+                int maxBorrowDays = Integer.parseInt(bookFields[2].getText());
+                Author author = new Author(authorNames, "L.", "12212" , new Address("1000 N. 4th st.", "Fairfield", "IA", "52557"), "Student");
+                List<Author> authors = new ArrayList<Author>();
+                authors.add(author);
+                ci.addBook(isbn, title, maxBorrowDays, (ArrayList<Author>) authors);
+
+                System.out.println("New book added successfully");
+                addRowToJTable( isbn, title, maxBorrowDays, authors.toString());
+
+                clearFormFields();
+
+            } catch (BookCopyException ex) {
+                System.out.println("Error");
+            } catch (NumberFormatException ex){
+//                new Messages.InnerFrame().showMessage("Input for Max days should be a number", "Error");
+                System.out.println("Input for Max days should be a number");
+            }
 
         }
     }

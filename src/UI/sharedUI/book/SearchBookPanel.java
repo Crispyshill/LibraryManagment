@@ -1,16 +1,13 @@
 package UI.sharedUI.book;
 
-import UI.Setting;
-import UI.Utility;
 import business.*;
 import business.exceptions.BookCopyException;
-import UI.*;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchBookPanel extends JPanel{
@@ -34,7 +31,7 @@ public class SearchBookPanel extends JPanel{
 
     private JTable loadTableData() {
 
-        String column[]={"ISBN","TITLE","NUMBER OF COPIES", "MEMBER NAME", "DUE DATE", };
+        String column[]={"ISBN","TITLE","COPY NUMBER", "MEMBER NAME", "DUE DATE", };
         DefaultTableModel model = new DefaultTableModel(null, column);
         return new JTable(model);
     }
@@ -86,10 +83,30 @@ public class SearchBookPanel extends JPanel{
         DefaultTableModel model = (DefaultTableModel) myTable.getModel();
         if(model.getRowCount() > 0)
             model.setRowCount(0);
-        model.addRow(new  Object[]{book.getIsbn() , book.getTitle(), book.getAuthors().toString(), book.getMaxCheckoutLength(), book.getNumCopies()});
+        for(int i : book.getCopyNums()){
+            model.addRow(new  Object[]{
+                    book.getIsbn() ,
+                    book.getTitle(),
+                    "Copy - " + i,null,
+                    null}
+            );
+        }
 
     }
 
+    private void addRowToJTable(CheckOutEntry entry){
+
+        DefaultTableModel model = (DefaultTableModel) myTable.getModel();
+        if(model.getRowCount() > 0)
+            model.setRowCount(0);
+
+        model.addRow(new  Object[]{
+                entry.getCopy().getBook().getIsbn() ,
+                entry.getCopy().getBook().getTitle(),
+                entry.getCopy().getCopyNum(),
+                entry.getCopy().getBook().getAuthors().toString(),
+                entry.getDueDate()});
+    }
     public void clearFormFields(){
         for(JTextField field : bookFields){
             field.setText("");
@@ -101,7 +118,27 @@ public class SearchBookPanel extends JPanel{
 
         @Override
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
+            try {
+                String isbn = bookFields[0].getText().trim();
 
+                if(!ci.allBookIds().contains(isbn))
+                    throw new BookCopyException("No book with ISBN  =  " + bookFields[0].getText().trim() + " found");
+
+                Book book = ci.getBooks().get(bookFields[0].getText().trim());
+                List<CheckOutEntry> books = ci.allOverDueBooks();
+
+                if(book == null)
+                    throw new BookCopyException("Unable to load book details");
+
+                addRowToJTable(book);
+
+                System.out.println("1 Results found ");
+
+                clearFormFields();
+
+            } catch (BookCopyException | NumberFormatException ex) {
+                  System.out.println(ex.getMessage());
+            }
         }
     }
 

@@ -9,11 +9,11 @@ public class Main {
 	public static void main(String[] args) {
 	      EventQueue.invokeLater(() -> 
 	         {
-				 AdminWindow.INSTANCE.setTitle("Library Management System");
-				 AdminWindow.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				 AdminWindow.INSTANCE.init();
-	             centerFrameOnDesktop(AdminWindow.INSTANCE);
-				 AdminWindow.INSTANCE.setVisible(true);
+				 LoginWindow.INSTANCE.setTitle("Library Management System");
+				 LoginWindow.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				 LoginWindow.INSTANCE.init();
+	             centerFrameOnDesktop(LoginWindow.INSTANCE);
+				 LoginWindow.INSTANCE.setVisible(true);
 	         });
 	   }
 	   public static void centerFrameOnDesktop(Component f) {

@@ -2,12 +2,15 @@ package UI;
 
 import UI.sharedUI.*;
 import UI.sharedUI.book.*;
+import UI.sharedUI.checkOut.CheckOutUI;
 import UI.sharedUI.member.*;
 import business.ControllerInterface;
 import business.SystemController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +23,14 @@ public class AdminWindow extends JFrame implements LibWindow {
     public static final AdminWindow INSTANCE = new AdminWindow();
 
     ControllerInterface ci = new SystemController();
-
     private boolean isInitialized = false;
 
-    JList<ListItem> linkList;
+    JList<MenuItem> linkList;
     JPanel cards;
 
-    List<ListItem> itemList = new ArrayList<>();
+    List<MenuItem> itemList = new ArrayList<>();
 
-    private  JPanel adminDashboardPanel;
+    private  JPanel adminDashboardPanel, memberPanel, checkOutPanel;
 
     public JScrollPane addBookPane, addBookCopyPane, searchBookPane;
     public JTable memberListJTable,bookListJTable;
@@ -39,15 +41,15 @@ public class AdminWindow extends JFrame implements LibWindow {
         UIController.INSTANCE.adminWindow = this;
 
         memberListJTable = MemberUI.INSTANCE.getMemberList();
-        bookListJTable = BookGui.INSTANCE.getBookList();
-        addBookPane = BookGui.INSTANCE.getAddBookPanel();
+        bookListJTable = BookUI.INSTANCE.getBookList();
+        addBookPane = BookUI.INSTANCE.getAddBookPanel();
         addBookCopyPane = AddBookCopyPanel.INSTANCE.getAddBookCopyPanel();
         searchBookPane = SearchBookPanel.INSTANCE.getSearchBookPanel();
     }
 
     public void constructSideBarMenu(){
         for(String item : Setting.ADMIN_MENU){
-            itemList.add(new ListItem(item, true));
+            itemList.add(new MenuItem(item, true));
         }
     }
 
@@ -67,17 +69,19 @@ public class AdminWindow extends JFrame implements LibWindow {
             boolean allowed = linkList.getSelectedValue().highlight();
             CardLayout cl = (CardLayout) (cards.getLayout());
 
-            if (!allowed) {
+            if (value == null) {
                 value = itemList.get(0).getItemName();
                 linkList.setSelectedIndex(0);
+                linkList.getSelectedValue().setHighlight(true);
+                System.out.println("pick first");
             }
             cl.show(cards, value);
         });
+
         linkList.setBackground(new Color(170, 98, 0));
         linkList.setVisibleRowCount(4);
         linkList.setFixedCellHeight(40);
         linkList.setSelectionForeground(Color.BLACK);
-
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, linkList, cards);
         splitPane.setDividerLocation(Setting.DIVIDER);
@@ -89,7 +93,6 @@ public class AdminWindow extends JFrame implements LibWindow {
         isInitialized = true;
         centerFrameOnDesktop(this);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 
     public static void centerFrameOnDesktop(Component f) {
@@ -102,51 +105,33 @@ public class AdminWindow extends JFrame implements LibWindow {
     }
 
     public void createMainPanels() {
-
-        // create admin panel
         setAdminDashboardPanel();
 
-        // Assign crossponding panels to crsossponding Cards
-        setCards();
+        setMemberPanel();
 
+        setCheckPanel();
+
+        setCards();
     }
 
     public void setCards(){
-        // book related panels
-        //JPanel searchBookPanel = SearchBookPanel.INSTANCE.getSearchBookPanel();
-        JPanel addBookPanel = BookGuii.INSTANCE.getAddBookPanel();
-
-        // member related panels
-        JPanel searchMemberPanel = SearchMemberPanel.INSTANCE.getsearchMemberPanel();
-        JPanel addMemberPanel = MemberUI.INSTANCE.getAddMemberPanel();
-        JPanel editOrDeletePanel = EditOrDeleteMember.INSTANCE.getAddMemberPanel();
-
-        // logout panel
         JPanel logoutPanel = Logout.INSTANCE.getLoginPanel();
-
-        // Dashboard panel
+//        JPanel checkPanel = CheckOutUI.INSTANCE.getCheckOutPanel();
         cards = new JPanel(new CardLayout());
 
         cards.add(adminDashboardPanel, itemList.get(0).getItemName());
-        cards.add(addMemberPanel, itemList.get(1).getItemName());
-        cards.add(addBookPanel, itemList.get(2).getItemName());
+        cards.add(memberPanel, itemList.get(1).getItemName());
+        cards.add(checkOutPanel, itemList.get(2).getItemName());
         cards.add(logoutPanel, itemList.get(3).getItemName());
     }
 
     public void setAdminDashboardPanel() {
         adminDashboardPanel = new JPanel(new BorderLayout());
-        JLabel jLTitle = new JLabel();
-        jLTitle.setText("Administrator Dashboard");
-        jLTitle.setFont(new java.awt.Font("SansSerif", 1, 18));
-        jLTitle.setForeground(new java.awt.Color(170, 98, 0));
+        JLabel aTitle = getAdminPaneTitle();
+        aTitle.setBorder(new EmptyBorder(20,230,20,100));
+        adminDashboardPanel.add(aTitle,BorderLayout.NORTH);
 
-        jLTitle.setBorder(new EmptyBorder(20,190,20,100));
-        adminDashboardPanel.add(jLTitle,BorderLayout.NORTH);
-        UIManager.put("TabbedPane.selected", Color.red);
-        UIManager.put("TabbedPane.focus", new java.awt.Color(170, 98, 0));
         JTabbedPane tp = new JTabbedPane();
-
-        tp.setFocusable(false);
         tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
 
         tp.add("View Books",new JScrollPane(bookListJTable));
@@ -155,11 +140,82 @@ public class AdminWindow extends JFrame implements LibWindow {
         tp.add("Search Book", searchBookPane);
 
         tp.setFont(Setting.DEFUALT_FONT);
-        tp.setForeground(Utility.LINK_AVAILABLE);
+        tp.setForeground(Setting.LINK_AVAILABLE);
         tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        ChangeListener changeListener = new ChangeListener() {
+            public void stateChanged(ChangeEvent changeEvent) {
+                bookListJTable = BookUI.INSTANCE.getBookList();
+                bookListJTable.invalidate();
+                System.out.println("upload data");
+            }
+        };
+
+        tp.addChangeListener(changeListener);
+
         adminDashboardPanel.add(tp , BorderLayout.CENTER);
     }
 
+    public JLabel getAdminPaneTitle(){
+        JLabel jLTitle = new JLabel();
+        jLTitle.setText("Administrator Dashboard");
+        jLTitle.setFont(new java.awt.Font("SansSerif", 1, 18));
+        jLTitle.setForeground(new java.awt.Color(170, 98, 0));
+        //jLTitle.setBorder(new EmptyBorder(20,190,20,100));
+
+        return jLTitle;
+    }
+
+    public void setMemberPanel() {
+        memberPanel = new JPanel(new BorderLayout());
+        JLabel title = getAdminPaneTitle();
+        title.setBorder(new EmptyBorder(20,230,20,100));
+        memberPanel.add(title,BorderLayout.NORTH);
+
+        JTabbedPane tp = new JTabbedPane();
+        JPanel addMemberPanel = MemberUI.INSTANCE.getAddMemberPanel();
+        tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
+
+        tp.add("View Members",new JScrollPane(memberListJTable));
+        tp.add("Add Member", addMemberPanel);
+
+        tp.setFont(Setting.DEFUALT_FONT);
+        tp.setForeground(Setting.LINK_AVAILABLE);
+        tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        memberPanel.add(tp , BorderLayout.CENTER);
+    }
+
+    public void setCheckPanel() {
+        checkOutPanel = new JPanel(new BorderLayout());
+        JLabel title = getAdminPaneTitle();
+        title.setBorder(new EmptyBorder(20,230,20,100));
+
+        JScrollPane checkPanel = CheckOutUI.INSTANCE.getCheckOutPanel();
+        JTabbedPane tp = new JTabbedPane();
+        tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
+
+        tp.add("Checkout Book", checkPanel);
+
+        tp.setFont(Setting.DEFUALT_FONT);
+        tp.setForeground(Setting.LINK_AVAILABLE);
+        tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        checkOutPanel.add(title,BorderLayout.NORTH);
+        checkOutPanel.add(tp , BorderLayout.CENTER);
+
+//        JTabbedPane tp = new JTabbedPane();
+//        JPanel addMemberPanel = MemberUI.INSTANCE.getAddMemberPanel();
+//        tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
+//
+//        tp.add("View Members",new JScrollPane(memberListJTable));
+//        tp.add("Add Member", addMemberPanel);
+//
+//        tp.setFont(Setting.DEFUALT_FONT);
+//        tp.setForeground(Setting.LINK_AVAILABLE);
+//        tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+
+    }
     @Override
     public boolean isInitialized() {
         return isInitialized;
@@ -174,13 +230,13 @@ public class AdminWindow extends JFrame implements LibWindow {
     @SuppressWarnings("serial")
     public void createLinkLabels() {
 
-        DefaultListModel<ListItem> model = new DefaultListModel<>();
+        DefaultListModel<MenuItem> model = new DefaultListModel<>();
 
-        for(ListItem item : itemList){
+        for(MenuItem item : itemList){
             model.addElement(item);
         }
 
-        linkList = new JList<ListItem>(model);
+        linkList = new JList<MenuItem>(model);
         linkList.setCellRenderer(new DefaultListCellRenderer() {
 
             @SuppressWarnings("rawtypes")
@@ -191,13 +247,13 @@ public class AdminWindow extends JFrame implements LibWindow {
 
                 Component c = super.getListCellRendererComponent(list,
                         value, index, isSelected, cellHasFocus);
-                if (value instanceof ListItem) {
-                    ListItem nextItem = (ListItem) value;
+                if (value instanceof MenuItem) {
+                    MenuItem nextItem = (MenuItem) value;
                     setText(nextItem.getItemName());
                     if (nextItem.highlight()) {
-                        setForeground(Utility.LINK_AVAILABLE);
+                        setForeground(Setting.LINK_AVAILABLE);
                     } else {
-                        setForeground(Utility.LINK_NOT_AVAILABLE);
+                        setForeground(Setting.LINK_NOT_AVAILABLE);
                     }
                     if (isSelected) {
                         setForeground(Color.BLACK);

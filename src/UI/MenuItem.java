@@ -1,17 +1,17 @@
 package UI;
 
-public class ListItem {
+public class MenuItem {
 	private String itemName;
 	private boolean highlight = false;
-	public ListItem(String item, boolean visible) {
+	public MenuItem(String item, boolean visible) {
 	   itemName = item;
 	   highlight = visible;
     }
 
 	@Override
 	public boolean equals(Object ob) {
-		if(ob.getClass() != ListItem.class) return false;
-		ListItem item = (ListItem)ob;
+		if(ob.getClass() != MenuItem.class) return false;
+		MenuItem item = (MenuItem)ob;
 		return itemName.equals(item.itemName);
 	}
 	public String getItemName() {

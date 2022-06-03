@@ -20,9 +20,16 @@ public class LoginWindow extends JFrame implements LibWindow {
 
          this.setSize(720, 400);
          createMyGUI();
+         clearFormFields();
          add(mainPanel);
+         Setting.centerFrameOnDesktop(this);
+         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    public void clearFormFields(){
+         jTFUserName.setText("");
+         jTFPassword.setText("");
+    }
     public boolean isInitialized() {
         return isInitialized;
     }
@@ -78,7 +85,6 @@ public class LoginWindow extends JFrame implements LibWindow {
         jLTitle.setText("Library Management System");
         jLTitle.setFont(new java.awt.Font("SansSerif", 1, 18));
         jLTitle.setForeground(new java.awt.Color(170, 98, 0));
-       // mainPanel.add(jLTitle);
         jLTitle.setBounds(80, 15, 300, 30);
 
         jPBody.setLayout(null);
@@ -111,14 +117,12 @@ public class LoginWindow extends JFrame implements LibWindow {
         jBLogin.setBounds(150, 190, 100, 40);
         addLoginButtonListener(jBLogin);
 
-
         mainPanel.add(jPBody);
         jPBody.setBounds(150, 70, 400, 260);
 
         getContentPane().add(mainPanel);
         mainPanel.setBounds(0, 0, 800, 400);
         this.setResizable(false);
-
     }
 
     private void addLoginButtonListener(JButton button) {
