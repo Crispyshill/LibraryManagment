@@ -38,11 +38,11 @@ final public class LibraryMember extends Person implements Serializable {
 		return record;
 	}
 
-	public List<CheckOutEntry> getOverDueBooks(){
+	public List<CheckOutEntry> getOverDueBooks(String bookId){
 		List<CheckOutEntry> overDueBooks = new ArrayList();
 		for(CheckOutEntry e : record.getEntries()){
 			// Checks if a given book is due before the current date, and adds it to overDueBooks if so
-			if(e.getDueDate().isBefore(LocalDate.now())){
+			if(e.getDueDate().isBefore(LocalDate.now()) && e.getCopy().getBook().getIsbn().equals(bookId) ){
 				overDueBooks.add(e);
 			}
 		}

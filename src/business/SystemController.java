@@ -57,10 +57,10 @@ public class SystemController implements ControllerInterface {
 		return retval;
 	}
 
-	public List<CheckOutEntry> allOverDueBooks(){
+	public List<CheckOutEntry> allOverDueBooks(String id){
 		List<CheckOutEntry> overDueBooks = new ArrayList<>();
 		for(LibraryMember m : da.readMemberMap().values()){
-			overDueBooks.addAll(m.getOverDueBooks());
+			overDueBooks.addAll(m.getOverDueBooks(id));
 		}
 		return overDueBooks;
 	}

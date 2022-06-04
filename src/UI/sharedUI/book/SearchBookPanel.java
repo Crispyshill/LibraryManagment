@@ -147,8 +147,8 @@ public class SearchBookPanel extends JPanel{
                 if(!ci.allBookIds().contains(isbn))
                     throw new BookCopyException("No book with ISBN  =  " + bookFields[0].getText().trim() + " found");
 
-                Book book = ci.getBooks().get(bookFields[0].getText().trim());
-                List<CheckOutEntry> books = ci.allOverDueBooks();
+                Book book = ci.getBooks().get(isbn);
+                List<CheckOutEntry> books = ci.allOverDueBooks(isbn);
 
                 if(books.size() == 0)
                     throw new BookCopyException("No record found");

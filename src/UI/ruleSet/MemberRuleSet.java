@@ -25,16 +25,16 @@ public class MemberRuleSet implements RuleSet {
 
     }
     private void idNumericRule() throws RuleException {
-        String val = memberGui.getMemberFields()[3].getText();
+        String val = memberGui.getMemberFields()[0].getText();
         try {
             Integer.parseInt(val);
             //val is numeric
         } catch(NumberFormatException e) {
-            throw new RuleException("Phone Number should be numeric");
+            throw new RuleException("Id Number should be numeric");
         }
     }
     private void zipNumericRule() throws RuleException {
-        String val =  memberGui.getMemberFields()[memberGui.getMemberFields().length-1].getText().trim();
+        String val =  memberGui.getMemberFields()[6].getText().trim();
         try {
             Integer.parseInt(val);
         } catch(NumberFormatException e) {
@@ -44,7 +44,7 @@ public class MemberRuleSet implements RuleSet {
     }
     private void stateRule() throws RuleException {
 
-        String state = memberGui.getMemberFields()[memberGui.getMemberFields().length-2].getText().trim();
+        String state = memberGui.getMemberFields()[5].getText().trim();
         if(state.length() != 2) throw new RuleException("State field must have two characters");
 
     }
