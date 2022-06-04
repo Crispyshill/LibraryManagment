@@ -1,6 +1,10 @@
 package UI.sharedUI.member;
 
 import UI.Setting;
+import UI.ruleSet.RuleException;
+import UI.ruleSet.RuleSet;
+import UI.ruleSet.RuleSetFactory;
+import UI.sharedUI.checkOut.CheckOutUI;
 import business.Address;
 import business.ControllerInterface;
 import business.LibraryMember;
@@ -24,6 +28,7 @@ public class MemberUI extends JPanel{
 
     private JTable myTable;
     private JPanel addMemberPanel;
+    private JPanel addCopyPanel;
 
     private MemberUI() {
         memeberAttributes = new String[] {"Member ID", "First Name", "Last Name",  "Street", "City", "State", "Zip", "Phone Number"};
@@ -117,6 +122,8 @@ public class MemberUI extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
+                RuleSet bookRules = RuleSetFactory.getRuleSet(MemberUI.this);
+                bookRules.applyRules(MemberUI.this);
 
                 if(ci.checkMemberId(memberFields[0].getText().trim()))
                     throw new LibraryMemberException("Member with  Id = " + memberFields[0].getText().trim() + " already exists");
@@ -132,8 +139,8 @@ public class MemberUI extends JPanel{
                 addRowToJTable(member);
                 clearFormFields();
 
-            } catch (LibraryMemberException  ex) {
-                System.out.println(ex);
+            } catch (LibraryMemberException | RuleException ex) {
+                System.out.println("Error " + ex.getMessage());
             }
         }
     }

@@ -1,5 +1,6 @@
 package dataaccess;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,10 +41,10 @@ public class TestData {
 	public void bookData() {
 		allBooks.get(0).addBookCopy();
 		allBooks.get(0).addBookCopy();
+		allBooks.get(0).addBookCopy();
 		allBooks.get(1).addBookCopy();
+		allBooks.get(2).addBookCopy();
 		allBooks.get(3).addBookCopy();
-		allBooks.get(2).addBookCopy();
-		allBooks.get(2).addBookCopy();
 		DataAccessFacade.loadBookMap(allBooks);
 	}
 
@@ -62,14 +63,24 @@ public class TestData {
 	//create library members
 	public void libraryMemberData() {
 		LibraryMember libraryMember = new LibraryMember("1001", "Andy", "Rogers", "641-223-2211", addresses.get(4));
+		libraryMember.addCheckoutRecord(allBooks.get(0).getNextAvailableCopy());
+		LocalDate dueDate = libraryMember.getRecord().getEntries().get(0).getDueDate();
+		libraryMember.getRecord().getEntries().get(0).setDueDate(dueDate.minusDays(30));
 		members.add(libraryMember);
+
 		libraryMember = new LibraryMember("1002", "Drew", "Stevens", "702-998-2414", addresses.get(5));
+		libraryMember.addCheckoutRecord(allBooks.get(1).getNextAvailableCopy());
 		members.add(libraryMember);
 
 		libraryMember = new LibraryMember("1003", "Sarah", "Eagleton", "451-234-8811", addresses.get(6));
+		libraryMember.addCheckoutRecord(allBooks.get(2).getNextAvailableCopy());
 		members.add(libraryMember);
 
 		libraryMember = new LibraryMember("1004", "Ricardo", "Montalbahn", "641-472-2871", addresses.get(7));
+		libraryMember.addCheckoutRecord(allBooks.get(3).getNextAvailableCopy());
+		libraryMember.addCheckoutRecord(allBooks.get(2).getNextAvailableCopy());
+		dueDate = libraryMember.getRecord().getEntries().get(0).getDueDate();
+		libraryMember.getRecord().getEntries().get(0).setDueDate(dueDate.minusDays(30));
 		members.add(libraryMember);
 
 		DataAccessFacade.loadMemberMap(members);

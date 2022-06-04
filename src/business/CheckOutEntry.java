@@ -37,6 +37,10 @@ final public class CheckOutEntry implements  Serializable {
         return dueDate;
     }
 
+    public void setDueDate(LocalDate date) {
+         dueDate = date;
+    }
+
     public BookCopy getCopy() {
         return copy;
     }

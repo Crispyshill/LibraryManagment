@@ -1,6 +1,9 @@
 package UI.sharedUI.book;
 
 import UI.Setting;
+import UI.ruleSet.RuleException;
+import UI.ruleSet.RuleSet;
+import UI.ruleSet.RuleSetFactory;
 import business.*;
 import business.exceptions.BookCopyException;
 
@@ -18,7 +21,9 @@ public class BookUI extends JPanel{
 
     private String[] bookAttributes = {"Title", "ISBN", "Max days" , "Authors"};
     private JTextField[] bookFields = new JTextField[bookAttributes.length];
+    private final String[] bookCopyAttributes = {"ISBN"};
 
+    private final JTextField[] bookCopyFields = new JTextField[bookCopyAttributes.length];
     private JPanel addBookPanel;
 
     public static BookUI INSTANCE = new BookUI();
@@ -40,7 +45,6 @@ public class BookUI extends JPanel{
         List<String> bookID = ci.allBookIds();
 
         for(int i = 0 ; i < bookID.size(); i++){
-
             Book book = bookHashMap.get(bookID.get(i));
             bookData[i][0] = book.getIsbn();
             bookData[i][1] = book.getTitle();
@@ -51,9 +55,31 @@ public class BookUI extends JPanel{
 
         DefaultTableModel model = new DefaultTableModel(bookData, column);
         model.fireTableDataChanged();
-        this.repaint();
+
         return new JTable(model);
     }
+
+    private DefaultTableModel updateTableModel(){
+
+        String column[]={"ISBN","TITLE","AUTHORS", "MAX BORROW DAYS", "NUMBER OF COPIES"};
+        HashMap<String , Book> bookHashMap = ci.getBooks();
+        String bookData [][] = new String[bookHashMap.size()][column.length];
+        List<String> bookID = ci.allBookIds();
+
+        for(int i = 0 ; i < bookID.size(); i++){
+            Book book = bookHashMap.get(bookID.get(i));
+            bookData[i][0] = book.getIsbn();
+            bookData[i][1] = book.getTitle();
+            bookData[i][2] = book.getAuthors().toString();
+            bookData[i][3] = ""+book.getMaxCheckoutLength();
+            bookData[i][4] = ""+book.getNumCopies();
+        }
+
+        DefaultTableModel model = new DefaultTableModel(bookData, column);
+
+        return model;
+    }
+
     public JTextField[] getBookFields() {
         return bookFields;
     }
@@ -61,11 +87,10 @@ public class BookUI extends JPanel{
     private void addBookForm() {
         JPanel addFormPanel = createAddBookForm();
 
-        //add add button
         JButton addBBookBtn = new JButton("Add Book");
         addBBookBtn.setPreferredSize(Setting.BTN_DIMENSION);
 
-        addBBookBtn.addActionListener(new addBookListiner());
+        addBBookBtn.addActionListener(new addBookListener());
         JPanel addBookBtnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 40));
         addBookBtnPanel.add(addBBookBtn);
 
@@ -102,18 +127,14 @@ public class BookUI extends JPanel{
         return nameForm;
     }
 
-    public  JTable refreshBookList() {
-//        myTable = loadTableData();
-        myTable.repaint();
-//        DefaultTableModel model = new DefaultTableModel(myTable);
-//        model.fireTableDataChanged();
-
-        myTable = loadTableData();
-        myTable.setDefaultEditor(Object.class , null);
-
+    public void refreshBookList() {
+        myTable.setModel(updateTableModel());
+        DefaultTableModel model = (DefaultTableModel) myTable.getModel();
+        model.fireTableDataChanged();
+    }
+    public  JTable getBookList() {
         return this.myTable;
     }
-
 
     private JPanel createAddBookForm() {
 
@@ -133,12 +154,14 @@ public class BookUI extends JPanel{
     }
 
 
-    private class addBookListiner implements ActionListener {
+    private class addBookListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
 
             try {
+                RuleSet bookRules = RuleSetFactory.getRuleSet(BookUI.this);
+                bookRules.applyRules(BookUI.this);
 
                 String title = bookFields[0].getText().trim();
                 String isbn = bookFields[1].getText().trim();
@@ -155,21 +178,22 @@ public class BookUI extends JPanel{
 
                 clearFormFields();
 
+
             } catch (BookCopyException ex) {
                 System.out.println("Error");
             } catch (NumberFormatException ex){
 //                new Messages.InnerFrame().showMessage("Input for Max days should be a number", "Error");
                 System.out.println("Input for Max days should be a number");
+            } catch (RuleException ex) {
+                System.out.println(ex.getMessage());
             }
 
         }
     }
     public void clearFormFields(){
-        for(JTextField field : bookFields){
+        for(JTextField field : bookFields) {
             field.setText("");
         }
-
     }
-
 
 }

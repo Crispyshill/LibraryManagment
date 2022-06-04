@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import UI.AdminLibWindow;
 import UI.AdminWindow;
+import UI.LibrarianWindow;
+import UI.Setting;
 import business.Controllers.BookController;
 import business.Controllers.BookCopyController;
 import business.Controllers.MemberController;
@@ -100,11 +103,20 @@ public class SystemController implements ControllerInterface {
 	}
 
 	public void openWindow(){
-
-		if(currentAuth.name().equals("ADMIN")){
+		Setting.hideAllWindows();
+		//LIBRARIAN, ADMIN, BOTH;
+		if(currentAuth.name().equals("BOTH")){
+			if(!AdminLibWindow.INSTANCE.isInitialized())
+				AdminLibWindow.INSTANCE.init();
+			AdminLibWindow.INSTANCE.setVisible(true);
+		} else if(currentAuth.name().equals("ADMIN")){
 			if(!AdminWindow.INSTANCE.isInitialized())
 				AdminWindow.INSTANCE.init();
 			AdminWindow.INSTANCE.setVisible(true);
+		} else if(currentAuth.name().equals("LIBRARIAN")){
+			if(!LibrarianWindow.INSTANCE.isInitialized())
+				LibrarianWindow.INSTANCE.init();
+			LibrarianWindow.INSTANCE.setVisible(true);
 		}
 	}
 
@@ -126,7 +138,7 @@ public class SystemController implements ControllerInterface {
 
 	public void saveLibraryMember(LibraryMember member){
 		MemberController mc = new MemberController();
-    mc.addNewMember(member, da);
+    	mc.addNewMember(member, da);
 	}
 
 	@Override
@@ -160,5 +172,8 @@ public class SystemController implements ControllerInterface {
 		getMembers().get(memberId).addCheckoutRecord(availableCopy);
 		List<CheckOutEntry> memberEntries = getMembers().get(memberId).getRecord().getEntries();
 		availableCopy.checkedOut(memberEntries.get(memberEntries.size()-1));
+
+		saveLibraryMember(getMembers().get(memberId));
+		saveBook(getBook(isbn));
 	}
 }

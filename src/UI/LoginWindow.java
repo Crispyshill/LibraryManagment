@@ -1,5 +1,9 @@
 package UI;
 
+import UI.ruleSet.RuleException;
+import UI.ruleSet.RuleSet;
+import UI.ruleSet.RuleSetFactory;
+import UI.sharedUI.checkOut.CheckOutUI;
 import business.exceptions.LoginException;
 import business.SystemController;
 
@@ -20,7 +24,7 @@ public class LoginWindow extends JFrame implements LibWindow {
 
          this.setSize(720, 400);
          createMyGUI();
-         clearFormFields();
+        // clearFormFields();
          add(mainPanel);
          Setting.centerFrameOnDesktop(this);
          this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -129,17 +133,27 @@ public class LoginWindow extends JFrame implements LibWindow {
         button.addActionListener(evt -> {
             SystemController sys = new SystemController();
             try{
+                RuleSet bookRules = RuleSetFactory.getRuleSet(LoginWindow.this);
+                bookRules.applyRules(LoginWindow.this);
 
                 String username = jTFUserName.getText();
                 char[] pass = jTFPassword.getPassword();
                 String password = new String(pass);
-
+                clearFormFields();
                 sys.login(username,password);
 
-            }catch(LoginException ex){
+            } catch(LoginException | RuntimeException | RuleException ex){
                System.out.println(ex.getMessage());
             }
         });
+    }
+
+    public JTextField getUserName() {
+        return jTFUserName;
+    }
+
+    public JPasswordField getPassword() {
+        return jTFPassword;
     }
 
 }

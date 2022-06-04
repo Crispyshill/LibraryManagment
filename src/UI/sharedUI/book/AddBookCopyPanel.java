@@ -1,5 +1,8 @@
 package UI.sharedUI.book;
 
+import UI.ruleSet.RuleException;
+import UI.ruleSet.RuleSet;
+import UI.ruleSet.RuleSetFactory;
 import business.*;
 import business.exceptions.BookCopyException;
 
@@ -76,6 +79,9 @@ public class AddBookCopyPanel extends JPanel{
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
 
             try {
+                RuleSet bookRules = RuleSetFactory.getRuleSet(AddBookCopyPanel.this);
+                bookRules.applyRules(AddBookCopyPanel.this);
+
                 String isbn = bookFields[0].getText().trim();
 
                 if(!ci.allBookIds().contains(isbn))
@@ -93,7 +99,7 @@ public class AddBookCopyPanel extends JPanel{
                 System.out.println("1 Copy added successfully ");
                 clearFormFields();
 
-            } catch (BookCopyException | NumberFormatException ex) {
+            } catch (BookCopyException | RuleException |NumberFormatException ex) {
                 System.out.println(ex.getMessage());
             }
 

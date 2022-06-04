@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AdminWindow extends JFrame implements LibWindow {
+public class LibrarianWindow extends JFrame implements LibWindow {
 
     private static final long serialVersionUID = 1L;
 
-    public static final AdminWindow INSTANCE = new AdminWindow();
+    public static final LibrarianWindow INSTANCE = new LibrarianWindow();
 
     ControllerInterface ci = new SystemController();
     private boolean isInitialized = false;
@@ -33,23 +33,23 @@ public class AdminWindow extends JFrame implements LibWindow {
 
     private  JPanel adminDashboardPanel, memberPanel, checkOutPanel;
 
-    public JScrollPane addBookPane, addBookCopyPane, searchBookPane;
+    public JScrollPane addBookPane, addBookCopyPane;
     public JTable memberListJTable,bookListJTable;
 
     //Singleton class
-    private AdminWindow() {
+    private LibrarianWindow() {
         setSize(Setting.APP_WIDTH, Setting.APP_HEIGHT);
-        UIController.INSTANCE.adminWindow = this;
+        UIController.INSTANCE.librarianWindow = this;
 
         memberListJTable = MemberUI.INSTANCE.getMemberList();
         bookListJTable = BookUI.INSTANCE.getBookList();
         addBookPane = BookUI.INSTANCE.getAddBookPanel();
         addBookCopyPane = AddBookCopyPanel.INSTANCE.getAddBookCopyPanel();
-        searchBookPane = SearchBookPanel.INSTANCE.getSearchBookPanel();
+        //searchBookPane = SearchBookPanel.INSTANCE.getSearchBookPanel();
     }
 
     public void constructSideBarMenu(){
-        for(String item : Setting.ADMIN_MENU){
+        for(String item : Setting.ALL_MENU){
             itemList.add(new MenuItem(item, true));
         }
     }
@@ -112,7 +112,7 @@ public class AdminWindow extends JFrame implements LibWindow {
     }
 
     public void createMainPanels() {
-        setAdminDashboardPanel();
+        setLibDashboardPanel();
 
         setMemberPanel();
 
@@ -128,22 +128,22 @@ public class AdminWindow extends JFrame implements LibWindow {
 
         cards.add(adminDashboardPanel, itemList.get(0).getItemName());
         cards.add(memberPanel, itemList.get(1).getItemName());
-        //cards.add(checkOutPanel, itemList.get(2).getItemName());
-        cards.add(logoutPanel, itemList.get(2).getItemName());
+        cards.add(checkOutPanel, itemList.get(2).getItemName());
+        cards.add(logoutPanel, itemList.get(3).getItemName());
     }
 
-    public void setAdminDashboardPanel() {
+    public void setLibDashboardPanel() {
         adminDashboardPanel = new JPanel(new BorderLayout());
         JLabel aTitle = getAdminPaneTitle();
-        aTitle.setBorder(new EmptyBorder(20,230,20,100));
+        aTitle.setBorder(new EmptyBorder(20,245,20,100));
         adminDashboardPanel.add(aTitle,BorderLayout.NORTH);
 
         JTabbedPane tp = new JTabbedPane();
         tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
 
         tp.add("View Books",new JScrollPane(bookListJTable));
-        tp.add("Add Book", BookUI.INSTANCE.getAddBookPanel());
-        tp.add("Add Book Copy", AddBookCopyPanel.INSTANCE.getAddBookCopyPanel());
+//        tp.add("Add Book", addBookPane);
+//        tp.add("Add Book Copy", addBookCopyPane);
         tp.add("Search Book", SearchBookPanel.INSTANCE.getSearchBookPanel());
 
         tp.setFont(Setting.DEFUALT_FONT);
@@ -154,7 +154,7 @@ public class AdminWindow extends JFrame implements LibWindow {
 
     public JLabel getAdminPaneTitle(){
         JLabel jLTitle = new JLabel();
-        jLTitle.setText("Administrator Dashboard");
+        jLTitle.setText("Librarian Dashboard");
         jLTitle.setFont(new Font("SansSerif", 1, 18));
         jLTitle.setForeground(new Color(170, 98, 0));
         //jLTitle.setBorder(new EmptyBorder(20,190,20,100));
@@ -165,7 +165,7 @@ public class AdminWindow extends JFrame implements LibWindow {
     public void setMemberPanel() {
         memberPanel = new JPanel(new BorderLayout());
         JLabel title = getAdminPaneTitle();
-        title.setBorder(new EmptyBorder(20,230,20,100));
+        title.setBorder(new EmptyBorder(20,240,20,100));
         memberPanel.add(title,BorderLayout.NORTH);
 
         JTabbedPane tp = new JTabbedPane();
@@ -173,7 +173,7 @@ public class AdminWindow extends JFrame implements LibWindow {
         tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
 
         tp.add("View Members",new JScrollPane(memberListJTable));
-        tp.add("Add Member", addMemberPanel);
+        //tp.add("Add Member", addMemberPanel);
 
         tp.setFont(Setting.DEFUALT_FONT);
         tp.setForeground(Setting.LINK_AVAILABLE);
@@ -211,7 +211,6 @@ public class AdminWindow extends JFrame implements LibWindow {
     @Override
     public void isInitialized(boolean val) {
         isInitialized = val;
-
     }
 
     @SuppressWarnings("serial")

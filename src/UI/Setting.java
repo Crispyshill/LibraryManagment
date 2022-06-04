@@ -21,29 +21,41 @@ public class Setting {
     public static final Dimension PANEL_DIMENSION =new Dimension(Setting.APP_WIDTH/2 + 100 , Setting.APP_HEIGHT/2);
 
     public static final String[] ALL_MENU = {
-
-    };
-
-    public static final String[] LIBRARIAN_MENU = {
-            "Logout",
-    };
-
-    public static final String[] ADMIN_MENU = {
             "Books",
             "Member",
             "Checkout",
             "Logout",
     };
 
+    public static final String[] LIBRARIAN_MENU = {
+            "Books",
+            "Member",
+            "Checkout",
+            "Logout",
+    };
+
+    public static final String[] ADMIN_MENU = {
+            "Books",
+            "Member",
+            "Logout",
+    };
+
     private static LibWindow[] allWindows = {
-            AdminWindow.INSTANCE,
-            LoginWindow.INSTANCE
-            //LibrarianDashboard.INSTANCE,
+            AdminLibWindow.INSTANCE,
+            LoginWindow.INSTANCE,
+            LibrarianWindow.INSTANCE,
+            AdminWindow.INSTANCE
     };
 
     public static void hideAllWindows() {
-        AdminWindow.INSTANCE.setVisible(false);
+        AdminLibWindow.INSTANCE.setVisible(false);
         LoginWindow.INSTANCE.setVisible(false);
+        AdminWindow.INSTANCE.setVisible(false);
+        LibrarianWindow.INSTANCE.setVisible(false);
+
+//        for(LibWindow frame: allWindows) {
+//            frame.setVisible(false);
+//        }
     }
 
     public static void centerFrameOnDesktop(Component f) {
@@ -54,8 +66,4 @@ public class Setting {
         int frameWidth = f.getSize().width;
         f.setLocation(((width - frameWidth) / 2), (height - frameHeight) / 3);
     }
-
-
-
-
 }

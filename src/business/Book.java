@@ -41,7 +41,6 @@ final public class Book implements Serializable {
 		newArr[copies.length] = new BookCopy(this, copies.length +1, true);
 		copies = newArr;
 	}
-
 	
 	@Override
 	public boolean equals(Object ob) {
@@ -50,7 +49,6 @@ final public class Book implements Serializable {
 		Book b = (Book)ob;
 		return b.isbn.equals(isbn);
 	}
-	
 	
 	public boolean isAvailable() {
 		if(copies == null) {
