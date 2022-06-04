@@ -20,7 +20,7 @@ final public class RuleSetFactory {
 		map.put(MemberUI.class, new MemberRuleSet());
 		map.put(LoginWindow.class, new LoginRuleSet());
 		map.put(CheckOutUI.class, new CheckOutRuleSet());
-		map.put(SearchCheckOut.class, new SearchMemberRuleSet());
+		map.put(SearchCheckOut.class, new SearchCheckoutRuleSet());
 		map.put(SearchBookPanel.class, new SearchBookRuleSet());
 		map.put(AddBookCopyPanel.class, new BookCopyRuleSet());
 	}

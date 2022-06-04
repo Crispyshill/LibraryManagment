@@ -4,7 +4,7 @@ import UI.sharedUI.checkOut.SearchCheckOut;
 
 import java.awt.*;
 
-public class SearchMemberRuleSet implements RuleSet{
+public class SearchCheckoutRuleSet implements RuleSet{
     private SearchCheckOut searchMemberPanel;
 
     @Override
