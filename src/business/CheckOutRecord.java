@@ -16,9 +16,11 @@ final public class CheckOutRecord implements Serializable {
     @Serial
     private static final long serialVersionUID = 1558162789779372371L;
     private List<CheckOutEntry> entries;
+    private LibraryMember member;
 
     //add person
-    public CheckOutRecord(){
+    public CheckOutRecord(LibraryMember member){
+        this.member = member;
         entries = new ArrayList<>();
     }
 
@@ -33,5 +35,9 @@ final public class CheckOutRecord implements Serializable {
     @Override
     public String toString() {
         return entries.toString();
+    }
+
+    public LibraryMember getMember() {
+        return member;
     }
 }

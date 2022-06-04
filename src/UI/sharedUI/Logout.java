@@ -3,7 +3,6 @@ package UI.sharedUI;
 import UI.AdminWindow;
 import UI.LoginWindow;
 import UI.Setting;
-import UI.UIController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,16 +48,7 @@ public class Logout {
         @Override
         public void actionPerformed(ActionEvent e) {
             Setting.hideAllWindows();
-
-            EventQueue.invokeLater(() ->
-            {
-                LoginWindow.INSTANCE.setTitle("Library Management System");
-                LoginWindow.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                if(!LoginWindow.INSTANCE.isInitialized())
-                    LoginWindow.INSTANCE.init();
-                centerFrameOnDesktop(LoginWindow.INSTANCE);
-                LoginWindow.INSTANCE.setVisible(true);
-            });
+            LoginWindow.INSTANCE.setVisible(true);
         }
     }
 

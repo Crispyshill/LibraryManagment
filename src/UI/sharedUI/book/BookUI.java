@@ -1,6 +1,9 @@
 package UI.sharedUI.book;
 
 import UI.Setting;
+import UI.ruleSet.RuleException;
+import UI.ruleSet.RuleSet;
+import UI.ruleSet.RuleSetFactory;
 import business.*;
 import business.exceptions.BookCopyException;
 
@@ -22,7 +25,6 @@ public class BookUI extends JPanel{
 
     private final JTextField[] bookCopyFields = new JTextField[bookCopyAttributes.length];
     private JPanel addBookPanel;
-    private JPanel addBookCopyPanel;
 
     public static BookUI INSTANCE = new BookUI();
     private JTable myTable;
@@ -31,7 +33,6 @@ public class BookUI extends JPanel{
 
     private BookUI() {
         addBookForm();
-        copyBookForm();
         myTable = loadTableData();
         myTable.setDefaultEditor(Object.class , null);
     }
@@ -50,7 +51,6 @@ public class BookUI extends JPanel{
             bookData[i][2] = book.getAuthors().toString();
             bookData[i][3] = ""+book.getMaxCheckoutLength();
             bookData[i][4] = ""+book.getNumCopies();
-            System.out.println(book.getIsbn() + "copy"+ book.getNumCopies());
         }
 
         DefaultTableModel model = new DefaultTableModel(bookData, column);
@@ -73,7 +73,6 @@ public class BookUI extends JPanel{
             bookData[i][2] = book.getAuthors().toString();
             bookData[i][3] = ""+book.getMaxCheckoutLength();
             bookData[i][4] = ""+book.getNumCopies();
-            System.out.println(book.getIsbn() + "copy"+ book.getNumCopies());
         }
 
         DefaultTableModel model = new DefaultTableModel(bookData, column);
@@ -161,6 +160,8 @@ public class BookUI extends JPanel{
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
 
             try {
+                RuleSet bookRules = RuleSetFactory.getRuleSet(BookUI.this);
+                bookRules.applyRules(BookUI.this);
 
                 String title = bookFields[0].getText().trim();
                 String isbn = bookFields[1].getText().trim();
@@ -177,11 +178,14 @@ public class BookUI extends JPanel{
 
                 clearFormFields();
 
+
             } catch (BookCopyException ex) {
                 System.out.println("Error");
             } catch (NumberFormatException ex){
 //                new Messages.InnerFrame().showMessage("Input for Max days should be a number", "Error");
                 System.out.println("Input for Max days should be a number");
+            } catch (RuleException ex) {
+                System.out.println(ex.getMessage());
             }
 
         }
@@ -189,69 +193,6 @@ public class BookUI extends JPanel{
     public void clearFormFields(){
         for(JTextField field : bookFields) {
             field.setText("");
-        }
-    }
-
-    ////////////Bock copy
-
-    public void clearCopyFormFields(){
-        for(JTextField field : bookCopyFields) {
-            field.setText("");
-        }
-    }
-    private void copyBookForm() {
-
-        addBookCopyPanel = new JPanel(new BorderLayout());
-
-        JPanel addCopyFormPanel = new JPanel();
-        for (int i = 0; i < bookCopyFields.length; i++) {
-            addCopyFormPanel.add(getElementWithLabelBookCopy(bookCopyAttributes[i], i));
-        }
-
-        JButton addBookBtn = new JButton("Add copy");
-        addBookBtn.addActionListener(new addBookCopyListener());
-
-        addCopyFormPanel.add(addBookBtn);
-
-        addBookCopyPanel.add(addCopyFormPanel, BorderLayout.CENTER);
-    }
-    private JPanel getElementWithLabelBookCopy(String labelName, int jtextFieldIndex) {
-        JLabel label = new JLabel(" " + labelName);
-        bookCopyFields[jtextFieldIndex] = new JTextField(20);
-
-        JPanel nameForm = new JPanel();
-        nameForm.add(label, BorderLayout.NORTH);
-        nameForm.add(bookCopyFields[jtextFieldIndex], BorderLayout.CENTER);
-
-        return nameForm;
-    }
-    public  JScrollPane getAddBookCopyPanel(){ return new JScrollPane(addBookCopyPanel); }
-
-    private class addBookCopyListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) throws NumberFormatException {
-
-            try {
-                String isbn = bookCopyFields[0].getText().trim();
-
-                if(!ci.allBookIds().contains(isbn))
-                    throw new BookCopyException("No book with ISBN  =  " + isbn + " found");
-                Book book = ci.getBooks().get(isbn);
-
-                if(book == null)
-                    throw new BookCopyException("Unable to load book details");
-
-                book.addBookCopy();
-                ci.saveBook(book);
-               refreshBookList();
-
-                System.out.println("1 Copy added successfully ");
-                clearCopyFormFields();
-
-            } catch (BookCopyException | NumberFormatException ex) {
-                System.out.println(ex.getMessage());
-            }
-
         }
     }
 

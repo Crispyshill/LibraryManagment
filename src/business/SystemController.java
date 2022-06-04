@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import UI.AdminLibWindow;
 import UI.AdminWindow;
+import UI.LibrarianWindow;
 import UI.Setting;
 import business.Controllers.BookController;
 import business.Controllers.BookCopyController;
 import business.Controllers.MemberController;
 import business.exceptions.BookCopyException;
+import business.exceptions.CheckOutException;
 import business.exceptions.LibrarySystemException;
 import business.exceptions.LoginException;
 import dataaccess.Auth;
@@ -19,7 +22,11 @@ import dataaccess.User;
 
 public class SystemController implements ControllerInterface {
 	public static Auth currentAuth = null;
-	private DataAccess da = new DataAccessFacade();
+	private DataAccess da;
+
+	public SystemController(){
+		da = new DataAccessFacade();
+	}
 
 	public void login(String id, String password) throws LoginException {
 
@@ -97,11 +104,19 @@ public class SystemController implements ControllerInterface {
 
 	public void openWindow(){
 		Setting.hideAllWindows();
-
-		if(currentAuth.name().equals("ADMIN")){
+		//LIBRARIAN, ADMIN, BOTH;
+		if(currentAuth.name().equals("BOTH")){
+			if(!AdminLibWindow.INSTANCE.isInitialized())
+				AdminLibWindow.INSTANCE.init();
+			AdminLibWindow.INSTANCE.setVisible(true);
+		} else if(currentAuth.name().equals("ADMIN")){
 			if(!AdminWindow.INSTANCE.isInitialized())
 				AdminWindow.INSTANCE.init();
 			AdminWindow.INSTANCE.setVisible(true);
+		} else if(currentAuth.name().equals("LIBRARIAN")){
+			if(!LibrarianWindow.INSTANCE.isInitialized())
+				LibrarianWindow.INSTANCE.init();
+			LibrarianWindow.INSTANCE.setVisible(true);
 		}
 	}
 
@@ -123,7 +138,7 @@ public class SystemController implements ControllerInterface {
 
 	public void saveLibraryMember(LibraryMember member){
 		MemberController mc = new MemberController();
-    mc.addNewMember(member, da);
+    	mc.addNewMember(member, da);
 	}
 
 	@Override
@@ -136,5 +151,29 @@ public class SystemController implements ControllerInterface {
 			return false;
 		return true;
 
+	}
+
+	public LibraryMember getLibraryMember(String memberId){
+		MemberController mc = new MemberController();
+		return mc.getLibraryMember(memberId, da);
+	}
+
+	public void checkOutBook(String memberId, String isbn) throws LibrarySystemException, CheckOutException {
+		BookCopy availableCopy = null;
+		for(BookCopy c : getBook(isbn).getCopies()){
+			if(c.isAvailable()){
+				availableCopy = c;
+				break;
+			}
+			if(availableCopy.equals(null)){
+				throw new CheckOutException("No available copies of specified book");
+			}
+		}
+		getMembers().get(memberId).addCheckoutRecord(availableCopy);
+		List<CheckOutEntry> memberEntries = getMembers().get(memberId).getRecord().getEntries();
+		availableCopy.checkedOut(memberEntries.get(memberEntries.size()-1));
+
+		saveLibraryMember(getMembers().get(memberId));
+		saveBook(getBook(isbn));
 	}
 }

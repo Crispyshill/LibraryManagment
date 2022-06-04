@@ -1,5 +1,8 @@
 package UI.sharedUI.book;
 
+import UI.ruleSet.RuleException;
+import UI.ruleSet.RuleSet;
+import UI.ruleSet.RuleSetFactory;
 import business.*;
 import business.exceptions.BookCopyException;
 
@@ -31,7 +34,7 @@ public class SearchBookPanel extends JPanel{
 
     private JTable loadTableData() {
 
-        String column[]={"ISBN","TITLE","COPY NUMBER", "MEMBER NAME", "DUE DATE", };
+        String column[]={"ISBN","TITLE","COPY NUMBER", "MEMBER NAME", "DUE DATE"};
         DefaultTableModel model = new DefaultTableModel(null, column);
         return new JTable(model);
     }
@@ -87,11 +90,28 @@ public class SearchBookPanel extends JPanel{
             model.addRow(new  Object[]{
                     book.getIsbn() ,
                     book.getTitle(),
-                    "Copy - " + i,null,
+                    "No - " + i,
+                    null,
                     null}
             );
         }
+    }
 
+    private void addRowToJTable(List<CheckOutEntry> books){
+
+        DefaultTableModel model = (DefaultTableModel) myTable.getModel();
+        if(model.getRowCount() > 0)
+            model.setRowCount(0);
+        for(CheckOutEntry coe : books){
+            model.addRow(new  Object[]{
+                    coe.getCopy().getBook().getIsbn(),
+                    coe.getCopy().getBook().getTitle(),
+                    "No - " + coe.getCopy().getBook().getNumCopies(),
+                    coe.getRecord().getMember().getFirstName() + " " + coe.getRecord().getMember().getLastName(),
+                    coe.getDueDate()
+                }
+            );
+        }
     }
 
     private void addRowToJTable(CheckOutEntry entry){
@@ -119,6 +139,9 @@ public class SearchBookPanel extends JPanel{
         @Override
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
             try {
+                RuleSet bookRules = RuleSetFactory.getRuleSet(SearchBookPanel.this);
+                bookRules.applyRules(SearchBookPanel.this);
+
                 String isbn = bookFields[0].getText().trim();
 
                 if(!ci.allBookIds().contains(isbn))
@@ -127,16 +150,16 @@ public class SearchBookPanel extends JPanel{
                 Book book = ci.getBooks().get(bookFields[0].getText().trim());
                 List<CheckOutEntry> books = ci.allOverDueBooks();
 
-                if(book == null)
-                    throw new BookCopyException("Unable to load book details");
+                if(books.size() == 0)
+                    throw new BookCopyException("No record found");
 
-                addRowToJTable(book);
+                addRowToJTable(books);
 
-                System.out.println("1 Results found ");
+                System.out.println("1 Results found");
 
                 clearFormFields();
 
-            } catch (BookCopyException | NumberFormatException ex) {
+            } catch (BookCopyException | RuleException |NumberFormatException ex) {
                   System.out.println(ex.getMessage());
             }
         }
