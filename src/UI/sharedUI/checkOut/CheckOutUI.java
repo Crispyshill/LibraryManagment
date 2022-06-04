@@ -4,9 +4,6 @@ import UI.Setting;
 import UI.ruleSet.RuleException;
 import UI.ruleSet.RuleSet;
 import UI.ruleSet.RuleSetFactory;
-import UI.sharedUI.book.BookUI;
-import UI.sharedUI.book.SearchBookPanel;
-import UI.sharedUI.member.MemberUI;
 import business.*;
 import business.exceptions.*;
 
@@ -122,7 +119,7 @@ public class CheckOutUI extends JPanel{
                 if( !ci.checkMemberId(memberId) || ci.getMembers().get(memberId) == null)
                     System.out.println("No member found with Member ID = "+ memberId);
                 else {
-                    // Check if book is available
+                    // Check if book exists
                     Book book = ci.getBooks().get(isbn);
                     if (book == null)
                         System.out.println("No book with ISBN = " + isbn + " found");

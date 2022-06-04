@@ -1,5 +1,4 @@
 package UI.sharedUI.checkOut;
-import UI.Setting;
 import UI.ruleSet.RuleException;
 import UI.ruleSet.RuleSet;
 import UI.ruleSet.RuleSetFactory;
@@ -118,7 +117,7 @@ public class SearchCheckOut extends JPanel{
 
                 // Check across library members
 
-                int counter = printMemberCheckout(memberId);
+                int counter = searchMemberRecord(memberId);
                 if(counter == 0)
                     System.out.println("No Checkout record with Member ID = " + memberId);
                 else{
@@ -150,7 +149,7 @@ public class SearchCheckOut extends JPanel{
         return model;
     }
 
-    int printMemberCheckout(String memberId){
+    int     searchMemberRecord(String memberId){
         HashMap<String , LibraryMember> libraryMemberHashMap = ci.getMembers();
         DefaultTableModel model = (DefaultTableModel) myTable.getModel();
         int record = 0 ;

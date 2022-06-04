@@ -32,6 +32,15 @@ public class SystemController implements ControllerInterface {
 
 		DataAccess da = new DataAccessFacade();
 		HashMap<String, User> map = da.readUserMap();
+		validate(map, id, password);
+
+		currentAuth = map.get(id).getAuthorization();
+		openWindow();
+
+		System.out.println("Welcome " + id + ": role  = " + currentAuth);
+	}
+
+	public void validate(HashMap<String, User> map, String id, String password) throws LoginException{
 		if(!map.containsKey(id)) {
 			throw new LoginException("ID " + id + " not found");
 		}
@@ -39,11 +48,6 @@ public class SystemController implements ControllerInterface {
 		if(!passwordFound.equals(password)) {
 			throw new LoginException("Password incorrect");
 		}
-
-		currentAuth = map.get(id).getAuthorization();
-		openWindow();
-
-		System.out.println("Welcome " + id + ": role  = " + currentAuth);
 	}
 	@Override
 	public List<String> allMemberIds() {
