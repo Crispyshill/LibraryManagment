@@ -41,9 +41,9 @@ public class AdminWindow extends JFrame implements LibWindow {
         UIController.INSTANCE.adminWindow = this;
 
         memberListJTable = MemberUI.INSTANCE.getMemberList();
-        bookListJTable = BookUI.INSTANCE.refreshBookList();
+        bookListJTable = BookUI.INSTANCE.getBookList();
         addBookPane = BookUI.INSTANCE.getAddBookPanel();
-        addBookCopyPane = AddBookCopyPanel.INSTANCE.getAddBookCopyPanel();
+        addBookCopyPane = BookUI.INSTANCE.getAddBookCopyPanel();
         searchBookPane = SearchBookPanel.INSTANCE.getSearchBookPanel();
     }
 
@@ -73,7 +73,6 @@ public class AdminWindow extends JFrame implements LibWindow {
                 value = itemList.get(0).getItemName();
                 linkList.setSelectedIndex(0);
                 linkList.getSelectedValue().setHighlight(true);
-                System.out.println("pick first");
             }
 
             cl.show(cards, value);
@@ -94,6 +93,12 @@ public class AdminWindow extends JFrame implements LibWindow {
         isInitialized = true;
         centerFrameOnDesktop(this);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void reloadFrame(){
+        this.invalidate();
+        this.validate();
+        this.repaint();
     }
 
     public static void centerFrameOnDesktop(Component f) {
@@ -145,15 +150,27 @@ public class AdminWindow extends JFrame implements LibWindow {
         tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         ChangeListener changeListener = new ChangeListener() {
             public void stateChanged(ChangeEvent changeEvent) {
-//                bookListJTable =
-                bookListJTable.repaint();
-                System.out.println("upload data");
+//                tp.getComponentAt(0).revalidate();
+//                tp.getComponentAt(0).repaint();
+//                adminDashboardPanel.revalidate();
+//                adminDashboardPanel.repaint();
             }
         };
 
         tp.addChangeListener(changeListener);
 
         adminDashboardPanel.add(tp , BorderLayout.CENTER);
+    }
+
+    public JTabbedPane refreshTabPane(JTabbedPane tp){
+
+        JTabbedPane tabs = new JTabbedPane();
+        tabs.add("View Books",new JScrollPane(bookListJTable));
+        tabs.add("Add Book", addBookPane);
+        tabs.add("Add Book Copy", addBookCopyPane);
+        tabs.add("Search Book", searchBookPane);
+
+        return tabs;
     }
 
     public JLabel getAdminPaneTitle(){

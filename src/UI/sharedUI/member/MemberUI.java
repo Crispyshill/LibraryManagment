@@ -24,6 +24,7 @@ public class MemberUI extends JPanel{
 
     private JTable myTable;
     private JPanel addMemberPanel;
+    private JPanel addCopyPanel;
 
     private MemberUI() {
         memeberAttributes = new String[] {"Member ID", "First Name", "Last Name",  "Street", "City", "State", "Zip", "Phone Number"};

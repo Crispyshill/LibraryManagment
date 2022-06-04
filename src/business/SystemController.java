@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import UI.AdminWindow;
+import UI.Setting;
 import business.Controllers.BookController;
 import business.Controllers.BookCopyController;
 import business.Controllers.MemberController;
@@ -95,6 +96,7 @@ public class SystemController implements ControllerInterface {
 	}
 
 	public void openWindow(){
+		Setting.hideAllWindows();
 
 		if(currentAuth.name().equals("ADMIN")){
 			if(!AdminWindow.INSTANCE.isInitialized())
