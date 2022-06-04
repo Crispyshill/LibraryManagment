@@ -8,17 +8,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import business.Book;
-import business.BookCopy;
-import business.LibraryMember;
+import business.*;
 import dataaccess.DataAccessFacade.StorageType;
 
 
 public class DataAccessFacade implements DataAccess {
 
 	enum StorageType {
-		BOOKS, MEMBERS, USERS, CHECKOUT; //add for checkout record, entry ..etc
+		BOOKS, MEMBERS, USERS, CHECKOUTRECORDS, CHECKOUTENTRIES; //add for checkout record, entry ..etc
 	}
 	public static final String OUTPUT_DIR = System.getProperty("user.dir")
 			+ "/src/dataaccess/storage";
@@ -37,6 +36,38 @@ public class DataAccessFacade implements DataAccess {
 		String ISBN = book.getIsbn();
 		books.put(ISBN, book);
 		saveToStorage(StorageType.BOOKS, books);
+	}
+
+	@Override
+	public void saveNewCheckoutRecord(CheckOutRecord record) {
+		HashMap<String, CheckOutRecord> records = readCheckOutRecordMap();
+		if(records == null){
+			records = new HashMap<>();
+		}
+		records.put(record.getMember().getMemberId(), record);
+		saveToStorage(StorageType.CHECKOUTRECORDS, records);
+	}
+
+	@Override
+	public HashMap<String, CheckOutRecord> readCheckOutRecordMap() {
+		return (HashMap<String, CheckOutRecord>)readFromStorage(StorageType.CHECKOUTRECORDS);
+
+	}
+
+	@Override
+	public void saveNewCheckoutEntry(CheckOutEntry entry) {
+		HashMap<CheckOutRecord, CheckOutEntry> entries = readCheckOutEntryMap();
+		if(entries == null){
+			entries = new HashMap<>();
+		}
+		entries.put(entry.getRecord(), entry);
+		saveToStorage(StorageType.CHECKOUTENTRIES, entries);
+
+	}
+
+	@Override
+	public HashMap<CheckOutRecord, CheckOutEntry> readCheckOutEntryMap() {
+		 return (HashMap<CheckOutRecord, CheckOutEntry>)readFromStorage(StorageType.CHECKOUTENTRIES);
 	}
 
 	@SuppressWarnings("unchecked")

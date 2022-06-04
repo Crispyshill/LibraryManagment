@@ -143,6 +143,10 @@ public class SystemController implements ControllerInterface {
 	public void saveLibraryMember(LibraryMember member){
 		MemberController mc = new MemberController();
     	mc.addNewMember(member, da);
+		da.saveNewCheckoutRecord(member.getRecord());
+		for(CheckOutEntry e : member.getRecord().getEntries()){
+			da.saveNewCheckoutEntry(e);
+		}
 	}
 
 	@Override
