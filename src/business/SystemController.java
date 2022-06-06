@@ -110,7 +110,6 @@ public class SystemController implements ControllerInterface {
 	}
 
 
-
 	@Override
 	public HashMap<String, LibraryMember> getMembers() {
 		return da.readMemberMap();
