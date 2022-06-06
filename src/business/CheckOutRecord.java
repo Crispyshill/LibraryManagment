@@ -18,20 +18,16 @@ final public class CheckOutRecord implements Serializable {
     private List<CheckOutEntry> entries;
     private LibraryMember member;
 
-    //add person
     public CheckOutRecord(LibraryMember member){
         this.member = member;
         entries = new ArrayList<>();
     }
-
     public void addCheckOutEntry(BookCopy bookCopy){
         entries.add(new CheckOutEntry(this , bookCopy));
     }
-
     public List<CheckOutEntry> getEntries() {
         return entries;
     }
-
     @Override
     public String toString() {
         return entries.toString();

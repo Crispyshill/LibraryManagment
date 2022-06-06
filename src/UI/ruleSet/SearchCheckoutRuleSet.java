@@ -6,7 +6,6 @@ import java.awt.*;
 
 public class SearchCheckoutRuleSet implements RuleSet{
     private SearchCheckOut searchMemberPanel;
-
     @Override
     public void applyRules(Component ob) throws RuleException {
         searchMemberPanel = (SearchCheckOut) ob;

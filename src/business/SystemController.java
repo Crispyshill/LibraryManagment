@@ -97,9 +97,19 @@ public class SystemController implements ControllerInterface {
 
 	@Override
 	public HashMap<String, Book> getBooks() {
-
 		return da.readBooksMap();
 	}
+
+	@Override
+	public HashMap<String, CheckOutRecord> getCheckOutRecord() {
+		return da.readCheckOutRecordMap();
+	}
+    @Override
+	public HashMap<CheckOutRecord, CheckOutEntry> getCheckOutEntry() {
+		return da.readCheckOutEntryMap();
+	}
+
+
 
 	@Override
 	public HashMap<String, LibraryMember> getMembers() {
@@ -167,21 +177,23 @@ public class SystemController implements ControllerInterface {
 	}
 
 	public void checkOutBook(String memberId, String isbn) throws LibrarySystemException, CheckOutException {
-		BookCopy availableCopy = null;
-		for(BookCopy c : getBook(isbn).getCopies()){
-			if(c.isAvailable()){
-				availableCopy = c;
-				break;
-			}
-			if(availableCopy.equals(null)){
+		//BookCopy availableCopy = null;
+		LibraryMember member = getMembers().get(memberId);
+		Book book = getBook(isbn);
+		BookCopy availableCopy = book.getNextAvailableCopy();
+
+		if(availableCopy == null){
+				System.out.println("No available copies of specified book");
 				throw new CheckOutException("No available copies of specified book");
-			}
 		}
-		getMembers().get(memberId).addCheckoutRecord(availableCopy);
-		List<CheckOutEntry> memberEntries = getMembers().get(memberId).getRecord().getEntries();
+
+		member.addCheckoutRecord(availableCopy);
+		List<CheckOutEntry> memberEntries = member.getRecord().getEntries();
 		availableCopy.checkedOut(memberEntries.get(memberEntries.size()-1));
 
-		saveLibraryMember(getMembers().get(memberId));
-		saveBook(getBook(isbn));
+		saveBook(book);
+		saveLibraryMember(member);
+		System.out.println("You have checked out successfully!");
+//		saveBook(book);
 	}
 }

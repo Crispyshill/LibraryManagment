@@ -5,7 +5,6 @@ import UI.sharedUI.book.SearchBookPanel;
 import java.awt.*;
 
 public class SearchBookRuleSet implements RuleSet{
-
     private SearchBookPanel searchBookPanel;
 
     @Override

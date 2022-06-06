@@ -6,15 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BookCopyRuleSet implements RuleSet {
-
     private AddBookCopyPanel bookCopyPanel;
-
     @Override
     public void applyRules(Component ob) throws RuleException {
-
         bookCopyPanel = (AddBookCopyPanel) ob;
         nonemptyRule();
-        //maxDays();
     }
 
     private void nonemptyRule() throws RuleException {

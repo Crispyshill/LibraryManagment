@@ -10,10 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Logout {
-
     public static Logout INSTANCE = new Logout();
     private JPanel logoutPanel  = new JPanel();
-
     private Logout() {
 
         JButton logoutBtn = new JButton("Log out");
@@ -50,15 +48,6 @@ public class Logout {
             Setting.hideAllWindows();
             LoginWindow.INSTANCE.setVisible(true);
         }
-    }
-
-    public static void centerFrameOnDesktop(Component f) {
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        int height = toolkit.getScreenSize().height;
-        int width = toolkit.getScreenSize().width;
-        int frameHeight = f.getSize().height;
-        int frameWidth = f.getSize().width;
-        f.setLocation(((width - frameWidth) / 2), (height - frameHeight) / 3);
     }
 
 }

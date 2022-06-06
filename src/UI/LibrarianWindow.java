@@ -6,6 +6,7 @@ import UI.sharedUI.book.BookUI;
 import UI.sharedUI.book.SearchBookPanel;
 import UI.sharedUI.checkOut.CheckOutUI;
 import UI.sharedUI.checkOut.SearchCheckOut;
+import UI.sharedUI.checkOut.ViewCheckOut;
 import UI.sharedUI.member.MemberUI;
 import business.ControllerInterface;
 import business.SystemController;
@@ -30,7 +31,6 @@ public class LibrarianWindow extends JFrame implements LibWindow {
     JPanel cards;
 
     List<MenuItem> itemList = new ArrayList<>();
-
     private  JPanel adminDashboardPanel, memberPanel, checkOutPanel;
 
     public JScrollPane addBookPane, addBookCopyPane;
@@ -45,7 +45,6 @@ public class LibrarianWindow extends JFrame implements LibWindow {
         bookListJTable = BookUI.INSTANCE.getBookList();
         addBookPane = BookUI.INSTANCE.getAddBookPanel();
         addBookCopyPane = AddBookCopyPanel.INSTANCE.getAddBookCopyPanel();
-        //searchBookPane = SearchBookPanel.INSTANCE.getSearchBookPanel();
     }
 
     public void constructSideBarMenu(){
@@ -96,12 +95,6 @@ public class LibrarianWindow extends JFrame implements LibWindow {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void reloadFrame(){
-        this.invalidate();
-        this.validate();
-        this.repaint();
-    }
-
     public static void centerFrameOnDesktop(Component f) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         int height = toolkit.getScreenSize().height;
@@ -123,7 +116,6 @@ public class LibrarianWindow extends JFrame implements LibWindow {
 
     public void setCards(){
         JPanel logoutPanel = Logout.INSTANCE.getLoginPanel();
-//        JPanel checkPanel = CheckOutUI.INSTANCE.getCheckOutPanel();
         cards = new JPanel(new CardLayout());
 
         cards.add(adminDashboardPanel, itemList.get(0).getItemName());
@@ -142,9 +134,7 @@ public class LibrarianWindow extends JFrame implements LibWindow {
         tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
 
         tp.add("View Books",new JScrollPane(bookListJTable));
-//        tp.add("Add Book", addBookPane);
-//        tp.add("Add Book Copy", addBookCopyPane);
-        tp.add("Search Book", SearchBookPanel.INSTANCE.getSearchBookPanel());
+        tp.add("Search Overdue Book", SearchBookPanel.INSTANCE.getSearchBookPanel());
 
         tp.setFont(Setting.DEFUALT_FONT);
         tp.setForeground(Setting.LINK_AVAILABLE);
@@ -157,7 +147,6 @@ public class LibrarianWindow extends JFrame implements LibWindow {
         jLTitle.setText("Librarian Dashboard");
         jLTitle.setFont(new Font("SansSerif", 1, 18));
         jLTitle.setForeground(new Color(170, 98, 0));
-        //jLTitle.setBorder(new EmptyBorder(20,190,20,100));
 
         return jLTitle;
     }
@@ -173,7 +162,6 @@ public class LibrarianWindow extends JFrame implements LibWindow {
         tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
 
         tp.add("View Members",new JScrollPane(memberListJTable));
-        //tp.add("Add Member", addMemberPanel);
 
         tp.setFont(Setting.DEFUALT_FONT);
         tp.setForeground(Setting.LINK_AVAILABLE);
@@ -191,7 +179,7 @@ public class LibrarianWindow extends JFrame implements LibWindow {
         JTabbedPane tp = new JTabbedPane();
         tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
 
-        //tp.add("View Checkout Record", checkPanel);
+        tp.add("View Checkout Record", ViewCheckOut.INSTANCE.getSearchCheckoutPanel());
         tp.add("Checkout Book", checkPanel);
         tp.add("Search Checkout", SearchCheckOut.INSTANCE.getSearchCheckoutPanel());
 

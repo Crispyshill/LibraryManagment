@@ -93,10 +93,8 @@ public class DataAccessFacade implements DataAccess {
 		return (HashMap<String, User>)readFromStorage(StorageType.USERS);
 	}
 
-
 	/////load methods - these place test data into the storage area
-	///// - used just once at startup  
-
+	///// - used just once at startup
 
 	static void loadBookMap(List<Book> bookList) {
 		HashMap<String, Book> books = new HashMap<String, Book>();
@@ -150,8 +148,6 @@ public class DataAccessFacade implements DataAccess {
 		}
 		return retVal;
 	}
-
-
 
 	final static class Pair<S,T> implements Serializable{
 

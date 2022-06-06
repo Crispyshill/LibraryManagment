@@ -24,7 +24,6 @@ public class LoginWindow extends JFrame implements LibWindow {
 
          this.setSize(720, 400);
          createMyGUI();
-        // clearFormFields();
          add(mainPanel);
          Setting.centerFrameOnDesktop(this);
          this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,7 +80,6 @@ public class LoginWindow extends JFrame implements LibWindow {
         jLPassword = new JLabel();
         jBLogin = new JButton();
 
-        //this is the main panel
         mainPanel.setBackground(new java.awt.Color(80, 1, 192));
         mainPanel.setToolTipText("");
         mainPanel.setLayout(null);

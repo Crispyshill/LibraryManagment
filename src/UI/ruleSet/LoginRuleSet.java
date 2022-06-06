@@ -5,9 +5,7 @@ import UI.LoginWindow;
 import java.awt.*;
 
 public class LoginRuleSet implements RuleSet{
-
     private LoginWindow loginScreen;
-
     @Override
     public void applyRules(Component ob) throws RuleException {
         loginScreen = (LoginWindow) ob;

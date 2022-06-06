@@ -12,9 +12,6 @@ import java.util.List;
 
 public class MemberController {
 
-    //operation related to members
-
-
     public void addNewMember(LibraryMember member, DataAccess dataAccess) {
         dataAccess.saveNewMember(member);
     }

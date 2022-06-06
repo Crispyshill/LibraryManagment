@@ -11,7 +11,6 @@ public interface ControllerInterface {
 	public void login(String id, String password) throws LoginException;
 	public List<String> allMemberIds();
 	public List<String> allBookIds();
-
 	HashMap<String, Book> getBooks();
 	HashMap<String, LibraryMember> getMembers();
 	public void addCopy(String isbn) throws BookCopyException;
@@ -22,5 +21,7 @@ public interface ControllerInterface {
 	Address addAddress(String street , String city , String state , String zip);
 	LibraryMember addLibraryMember(String memberNumber , String firstName , String lastName , String phoneNumber , Address address);
 	void saveLibraryMember(LibraryMember member) throws LibraryMemberException;
+	public HashMap<String, CheckOutRecord> getCheckOutRecord();
+	HashMap<CheckOutRecord, CheckOutEntry> getCheckOutEntry();
 
 }
