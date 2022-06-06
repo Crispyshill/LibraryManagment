@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CheckOutRuleSet implements RuleSet{
-
     private CheckOutUI checkOutGui;
 
     @Override

@@ -96,12 +96,6 @@ public class AdminWindow extends JFrame implements LibWindow {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void reloadFrame(){
-        this.invalidate();
-        this.validate();
-        this.repaint();
-    }
-
     public static void centerFrameOnDesktop(Component f) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         int height = toolkit.getScreenSize().height;
@@ -116,19 +110,15 @@ public class AdminWindow extends JFrame implements LibWindow {
 
         setMemberPanel();
 
-        setCheckPanel();
-
         setCards();
     }
 
     public void setCards(){
         JPanel logoutPanel = Logout.INSTANCE.getLoginPanel();
-//        JPanel checkPanel = CheckOutUI.INSTANCE.getCheckOutPanel();
         cards = new JPanel(new CardLayout());
 
         cards.add(adminDashboardPanel, itemList.get(0).getItemName());
         cards.add(memberPanel, itemList.get(1).getItemName());
-        //cards.add(checkOutPanel, itemList.get(2).getItemName());
         cards.add(logoutPanel, itemList.get(2).getItemName());
     }
 
@@ -144,7 +134,7 @@ public class AdminWindow extends JFrame implements LibWindow {
         tp.add("View Books",new JScrollPane(bookListJTable));
         tp.add("Add Book", BookUI.INSTANCE.getAddBookPanel());
         tp.add("Add Book Copy", AddBookCopyPanel.INSTANCE.getAddBookCopyPanel());
-        tp.add("Search Book", SearchBookPanel.INSTANCE.getSearchBookPanel());
+        tp.add("Search Overdue Book", SearchBookPanel.INSTANCE.getSearchBookPanel());
 
         tp.setFont(Setting.DEFUALT_FONT);
         tp.setForeground(Setting.LINK_AVAILABLE);
@@ -157,7 +147,6 @@ public class AdminWindow extends JFrame implements LibWindow {
         jLTitle.setText("Administrator Dashboard");
         jLTitle.setFont(new Font("SansSerif", 1, 18));
         jLTitle.setForeground(new Color(170, 98, 0));
-        //jLTitle.setBorder(new EmptyBorder(20,190,20,100));
 
         return jLTitle;
     }
@@ -182,27 +171,6 @@ public class AdminWindow extends JFrame implements LibWindow {
         memberPanel.add(tp , BorderLayout.CENTER);
     }
 
-    public void setCheckPanel() {
-        checkOutPanel = new JPanel(new BorderLayout());
-        JLabel title = getAdminPaneTitle();
-        title.setBorder(new EmptyBorder(20,230,20,100));
-
-        JScrollPane checkPanel = CheckOutUI.INSTANCE.getCheckOutPanel();
-        JTabbedPane tp = new JTabbedPane();
-        tp.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
-
-        //tp.add("View Checkout Record", checkPanel);
-        tp.add("Checkout Book", checkPanel);
-        tp.add("Search Checkout", SearchCheckOut.INSTANCE.getSearchCheckoutPanel());
-
-        tp.setFont(Setting.DEFUALT_FONT);
-        tp.setForeground(Setting.LINK_AVAILABLE);
-        tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-
-        checkOutPanel.add(title,BorderLayout.NORTH);
-        checkOutPanel.add(tp , BorderLayout.CENTER);
-
-    }
     @Override
     public boolean isInitialized() {
         return isInitialized;

@@ -4,6 +4,7 @@ import UI.sharedUI.*;
 import UI.sharedUI.book.*;
 import UI.sharedUI.checkOut.CheckOutUI;
 import UI.sharedUI.checkOut.SearchCheckOut;
+import UI.sharedUI.checkOut.ViewCheckOut;
 import UI.sharedUI.member.*;
 import business.ControllerInterface;
 import business.SystemController;
@@ -56,7 +57,7 @@ public class AdminLibWindow extends JFrame implements LibWindow {
         // Construct sideBarMenu ListItems
         constructSideBarMenu();
 
-        // Create sidebar -- render
+        // Create side menubar -- render
         createLinkLabels();
 
         // create main panels
@@ -92,12 +93,6 @@ public class AdminLibWindow extends JFrame implements LibWindow {
         isInitialized = true;
         centerFrameOnDesktop(this);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
-    public void reloadFrame(){
-        this.invalidate();
-        this.validate();
-        this.repaint();
     }
 
     public static void centerFrameOnDesktop(Component f) {
@@ -141,7 +136,7 @@ public class AdminLibWindow extends JFrame implements LibWindow {
         tpAdmin.add("View Books",new JScrollPane(bookListJTable));
         tpAdmin.add("Add Book", BookUI.INSTANCE.getAddBookPanel());
         tpAdmin.add("Add Book Copy", AddBookCopyPanel.INSTANCE.getAddBookCopyPanel());
-        tpAdmin.add("Search Book", SearchBookPanel.INSTANCE.getSearchBookPanel());
+        tpAdmin.add("Search Overdue Book", SearchBookPanel.INSTANCE.getSearchBookPanel());
 
         tpAdmin.setFont(Setting.DEFUALT_FONT);
         tpAdmin.setForeground(Setting.LINK_AVAILABLE);
@@ -184,20 +179,19 @@ public class AdminLibWindow extends JFrame implements LibWindow {
         JLabel title = getAdminPaneTitle();
         title.setBorder(new EmptyBorder(20,170,20,100));
 
-        JScrollPane checkPanel = CheckOutUI.INSTANCE.getCheckOutPanel();
-        JTabbedPane tpCehcl = new JTabbedPane();
-        tpCehcl.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
+        JTabbedPane tpCheck = new JTabbedPane();
+        tpCheck.setPreferredSize(new Dimension(Setting.APP_WIDTH - Setting.DIVIDER, Setting.APP_HEIGHT ));
 
-        //tp.add("View Checkout Record", checkPanel);
-        tpCehcl.add("Checkout Book", checkPanel);
-        tpCehcl.add("Search Checkout", SearchCheckOut.INSTANCE.getSearchCheckoutPanel());
+        tpCheck.add("View Checkout Record", ViewCheckOut.INSTANCE.getSearchCheckoutPanel());
+        tpCheck.add("Checkout Book", CheckOutUI.INSTANCE.getCheckOutPanel());
+        tpCheck.add("Search Checkout", SearchCheckOut.INSTANCE.getSearchCheckoutPanel());
 
-        tpCehcl.setFont(Setting.DEFUALT_FONT);
-        tpCehcl.setForeground(Setting.LINK_AVAILABLE);
-        tpCehcl.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tpCheck.setFont(Setting.DEFUALT_FONT);
+        tpCheck.setForeground(Setting.LINK_AVAILABLE);
+        tpCheck.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
         checkOutMenuPanel.add(title,BorderLayout.NORTH);
-        checkOutMenuPanel.add(tpCehcl , BorderLayout.CENTER);
+        checkOutMenuPanel.add(tpCheck , BorderLayout.CENTER);
 
     }
     @Override

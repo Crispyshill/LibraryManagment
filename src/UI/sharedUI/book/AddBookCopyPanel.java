@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 public class AddBookCopyPanel extends JPanel{
     public static  AddBookCopyPanel INSTANCE = new AddBookCopyPanel();
     // form elements
@@ -66,7 +65,6 @@ public class AddBookCopyPanel extends JPanel{
         }
         return bookFormPanel;
     }
-
 
     public void clearFormFields(){
         for(JTextField field : bookFields){

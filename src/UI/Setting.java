@@ -10,10 +10,6 @@ public class Setting {
     public static final int DIVIDER = 200;
     public static  final Font DEFUALT_FONT = new Font("Tahoma", 1, 13);
     public static final Color DARK_BLUE = Color.BLACK.darker();
-
-    public static final Color ERROR_MESSAGE_COLOR = Color.RED.darker();
-
-    public static final Color INFO_MESSAGE_COLOR = new Color(24, 98, 19); //dark green
     public static final Color LINK_AVAILABLE = DARK_BLUE;
     public static final Color LINK_NOT_AVAILABLE = Color.gray;
 
@@ -52,10 +48,6 @@ public class Setting {
         LoginWindow.INSTANCE.setVisible(false);
         AdminWindow.INSTANCE.setVisible(false);
         LibrarianWindow.INSTANCE.setVisible(false);
-
-//        for(LibWindow frame: allWindows) {
-//            frame.setVisible(false);
-//        }
     }
 
     public static void centerFrameOnDesktop(Component f) {

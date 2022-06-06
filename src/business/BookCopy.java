@@ -50,7 +50,6 @@ final public class BookCopy implements Serializable {
 		isAvailable = true;
 	}
 
-	
 	@Override
 	public boolean equals(Object ob) {
 		if(ob == null) return false;
@@ -58,5 +57,4 @@ final public class BookCopy implements Serializable {
 		BookCopy copy = (BookCopy)ob;
 		return copy.book.getIsbn().equals(book.getIsbn()) && copy.copyNum == copyNum;
 	}
-	
 }

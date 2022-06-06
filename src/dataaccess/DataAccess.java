@@ -13,9 +13,7 @@ public interface DataAccess {
 	public HashMap<String,User> readUserMap();
 	public HashMap<String, LibraryMember> readMemberMap();
 	public void saveNewMember(LibraryMember member);
-
 	public void saveNewBook(Book book);
-
 	public void saveNewCheckoutRecord(CheckOutRecord record);
 
 	public HashMap<String, CheckOutRecord> readCheckOutRecordMap();
@@ -23,4 +21,5 @@ public interface DataAccess {
 	public void saveNewCheckoutEntry(CheckOutEntry entry);
 
 	public HashMap<CheckOutRecord, CheckOutEntry> readCheckOutEntryMap();
+
 }

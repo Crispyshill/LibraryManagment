@@ -40,15 +40,13 @@ public class SearchCheckOut extends JPanel{
 
         DefaultTableModel model = new DefaultTableModel(null, column);
 
-        model = listOverDueBooks(model);
-
         return new JTable(model);
     }
 
     private void printMemberCheckOutForm() {
 
         printMemberCheckOutPanel = new JPanel(new BorderLayout());
-        JPanel addFormPanel = createsprintMemberCheckOutForm();
+        JPanel addFormPanel = searchCheckOutForm();
 
         JButton searchBtn = new JButton("Search");
         searchBtn.addActionListener(new searchBookListener());
@@ -60,8 +58,6 @@ public class SearchCheckOut extends JPanel{
     }
 
     public  JScrollPane getSearchCheckoutPanel(){ return new JScrollPane(printMemberCheckOutPanel); }
-
-    public  JPanel getPrintMemberCheckOutPanel(){ return printMemberCheckOutPanel; }
 
     private JPanel getElementWithLabelBook(String labelName, int jtextFieldIndex) {
 
@@ -75,22 +71,13 @@ public class SearchCheckOut extends JPanel{
         return nameForm;
     }
 
-    private JPanel createsprintMemberCheckOutForm() {
+    private JPanel searchCheckOutForm() {
 
         JPanel bookFormPanel = new JPanel();
         for (int i = 0; i < printMemberFields.length; i++) {
             bookFormPanel.add(getElementWithLabelBook(printMemberAttributes[i], i));
         }
         return bookFormPanel;
-    }
-
-    private void addRowToJTable(Book book , String member_Id , int copyNum){
-
-        DefaultTableModel model = (DefaultTableModel) myTable.getModel();
-        if(model.getRowCount() > 0)
-            model.setRowCount(0);
-        model.insertRow(0, new  Object[]{book.getIsbn() , book.getTitle(), member_Id, copyNum, member_Id});
-
     }
 
     public void clearFormFields(){
@@ -100,7 +87,6 @@ public class SearchCheckOut extends JPanel{
     }
 
     private class searchBookListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
 
@@ -115,9 +101,8 @@ public class SearchCheckOut extends JPanel{
                 if(!ci.allMemberIds().contains(memberId))
                     throw new BookCopyException("No Member  with ID  =  " + printMemberFields[0].getText().trim() + " found");
 
-                // Check across library members
-
                 int counter = searchMemberRecord(memberId);
+
                 if(counter == 0)
                     System.out.println("No Checkout record with Member ID = " + memberId);
                 else{
@@ -133,23 +118,7 @@ public class SearchCheckOut extends JPanel{
         }
     }
 
-    DefaultTableModel listOverDueBooks(DefaultTableModel model){
-
-        HashMap<String , LibraryMember> libraryMemberHashMap = ci.getMembers();
-        if( libraryMemberHashMap !=null){
-
-            for(String key : libraryMemberHashMap.keySet()){
-                LibraryMember member = libraryMemberHashMap.get(key);
-                for(CheckOutEntry entry : member.getRecord().getEntries()){
-                    model.insertRow(0, new  Object[]{ entry.getCopy().getBook().getIsbn(),  entry.getCopy().getBook().getTitle(),  entry.getCopy().getCopyNum(), member.getMemberId()});
-                }
-            }
-        }
-
-        return model;
-    }
-
-    int     searchMemberRecord(String memberId){
+    int searchMemberRecord(String memberId){
         HashMap<String , LibraryMember> libraryMemberHashMap = ci.getMembers();
         DefaultTableModel model = (DefaultTableModel) myTable.getModel();
         int record = 0 ;

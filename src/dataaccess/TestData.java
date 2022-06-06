@@ -19,7 +19,7 @@ import business.*;
 
 
 public class TestData {
-
+	DataAccess da = new DataAccessFacade();
 	public static void main(String[] args) {
 		TestData td = new TestData();
 		td.bookData();
@@ -31,56 +31,72 @@ public class TestData {
 		System.out.println(da.readUserMap());
 	}
 
-	///Add book record
-	public void loadBookData() {
-		//allBooks.get(0).addCopy();
-		DataAccessFacade.loadBookMap(allBooks);
-	}
-
 	///create books
 	public void bookData() {
 		allBooks.get(0).addBookCopy();
+		da.saveNewBook(allBooks.get(0));
+
 		allBooks.get(0).addBookCopy();
-		allBooks.get(0).addBookCopy();
+		da.saveNewBook(allBooks.get(0));
+
 		allBooks.get(1).addBookCopy();
+		da.saveNewBook(allBooks.get(1));
+
 		allBooks.get(2).addBookCopy();
+		da.saveNewBook(allBooks.get(2));
+
 		allBooks.get(3).addBookCopy();
-		DataAccessFacade.loadBookMap(allBooks);
+		da.saveNewBook(allBooks.get(3));
+
+		//DataAccessFacade.loadBookMap(allBooks);
 	}
 
 	//Add users data
 	public void userData() {
 		DataAccessFacade.loadUserMap(allUsers);
 	}
-	
-	//add library members
-	public void loadLibraryMemberData() {
-		LibraryMember libraryMember = new LibraryMember("1001", "Haile", "Girmmmm", "641-223-2211", addresses.get(4));
-		members.add(libraryMember);
-		DataAccessFacade.loadMemberMap(members);	
-	}
 
 	//create library members
 	public void libraryMemberData() {
 		LibraryMember libraryMember = new LibraryMember("1001", "Andy", "Rogers", "641-223-2211", addresses.get(4));
-		libraryMember.addCheckoutRecord(allBooks.get(0).getNextAvailableCopy());
-		LocalDate dueDate = libraryMember.getRecord().getEntries().get(0).getDueDate();
-		libraryMember.getRecord().getEntries().get(0).setDueDate(dueDate.minusDays(30));
+		BookCopy copy = allBooks.get(0).getNextAvailableCopy();
+		libraryMember.addCheckoutRecord(copy);
+		List<CheckOutEntry> memberEntries = libraryMember.getRecord().getEntries();
+		LocalDate dueDate = memberEntries.get(0).getDueDate();
+		memberEntries.get(0).setDueDate(dueDate.minusDays(30));
+		memberEntries.get(0).getCopy().checkedOut(memberEntries.get(memberEntries.size()-1));
+
+		da.saveNewBook(allBooks.get(0));
 		members.add(libraryMember);
 
 		libraryMember = new LibraryMember("1002", "Drew", "Stevens", "702-998-2414", addresses.get(5));
-		libraryMember.addCheckoutRecord(allBooks.get(1).getNextAvailableCopy());
+		copy = allBooks.get(1).getNextAvailableCopy();
+		libraryMember.addCheckoutRecord(copy);
+		copy.checkedOut(libraryMember.getRecord().getEntries().get(0));
+		da.saveNewBook(allBooks.get(1));
+
+		copy = allBooks.get(2).getNextAvailableCopy();
+		libraryMember.addCheckoutRecord(copy);
+		copy.checkedOut(libraryMember.getRecord().getEntries().get(1));
+		da.saveNewBook(allBooks.get(2));
 		members.add(libraryMember);
 
 		libraryMember = new LibraryMember("1003", "Sarah", "Eagleton", "451-234-8811", addresses.get(6));
-		libraryMember.addCheckoutRecord(allBooks.get(2).getNextAvailableCopy());
+		copy = allBooks.get(2).getNextAvailableCopy();
+		libraryMember.addCheckoutRecord(copy);
+		copy.checkedOut(libraryMember.getRecord().getEntries().get(0));
+		da.saveNewBook(allBooks.get(2));
 		members.add(libraryMember);
 
 		libraryMember = new LibraryMember("1004", "Ricardo", "Montalbahn", "641-472-2871", addresses.get(7));
-		libraryMember.addCheckoutRecord(allBooks.get(3).getNextAvailableCopy());
-		libraryMember.addCheckoutRecord(allBooks.get(2).getNextAvailableCopy());
+		copy = allBooks.get(3).getNextAvailableCopy();
+		libraryMember.addCheckoutRecord(copy);
+		copy.checkedOut(libraryMember.getRecord().getEntries().get(0));
+
 		dueDate = libraryMember.getRecord().getEntries().get(0).getDueDate();
 		libraryMember.getRecord().getEntries().get(0).setDueDate(dueDate.minusDays(30));
+
+		da.saveNewBook(allBooks.get(3));
 		members.add(libraryMember);
 
 		DataAccessFacade.loadMemberMap(members);
@@ -128,7 +144,7 @@ public class TestData {
 		{
 			add(new User("Admin", "1234", Auth.ADMIN));
 			add(new User("Lib", "1234", Auth.LIBRARIAN));
-			add(new User("Mem", "1234", Auth.BOTH));
+			add(new User("Super", "1234", Auth.BOTH));
 		}
 	};
 

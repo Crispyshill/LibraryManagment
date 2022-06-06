@@ -94,7 +94,6 @@ public class BookUI extends JPanel{
         JPanel addBookBtnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 40));
         addBookBtnPanel.add(addBBookBtn);
 
-
         JPanel container = new JPanel(new BorderLayout());
         container.setPreferredSize(Setting.PANEL_DIMENSION);
 
@@ -146,16 +145,13 @@ public class BookUI extends JPanel{
         return bookFormPanel;
     }
 
-
     private void addRowToJTable( String isbn, String title, int maxBorrowDays, String authors){
 
         DefaultTableModel model = (DefaultTableModel) myTable.getModel();
         model.insertRow(0, new  Object[]{isbn , title , authors, maxBorrowDays, 1});
     }
 
-
     private class addBookListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) throws NumberFormatException {
 
@@ -178,11 +174,9 @@ public class BookUI extends JPanel{
 
                 clearFormFields();
 
-
             } catch (BookCopyException ex) {
                 System.out.println("Error");
             } catch (NumberFormatException ex){
-//                new Messages.InnerFrame().showMessage("Input for Max days should be a number", "Error");
                 System.out.println("Input for Max days should be a number");
             } catch (RuleException ex) {
                 System.out.println(ex.getMessage());

@@ -5,9 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MemberRuleSet implements RuleSet {
-
     private MemberUI memberGui;
-
     @Override
     public void applyRules(Component ob) throws RuleException {
          memberGui = (MemberUI) ob;

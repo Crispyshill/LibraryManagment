@@ -24,13 +24,7 @@ final public class LibraryMember extends Person implements Serializable {
 		return memberId;
 	}
 
-	/***
-	 *  Checking out book
-	 * @return
-	 */
-
 	public void addCheckoutRecord(BookCopy copy){
-
 		record.addCheckOutEntry(copy);
 	}
 
@@ -54,8 +48,6 @@ final public class LibraryMember extends Person implements Serializable {
 		return "Member Info: " + "ID: " + memberId + ", name: " + getFirstName() + " " + getLastName() + 
 				", " + getTelephone() + " " + getAddress() + record.toString();
 	}
-
-
 
 	private static final long serialVersionUID = -2226197306790714013L;
 }

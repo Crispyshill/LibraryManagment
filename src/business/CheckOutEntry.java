@@ -11,7 +11,6 @@ final public class CheckOutEntry implements  Serializable {
 
     @Serial
     private static final long serialVersionUID = -5284498938395102316L;
-
     private CheckOutRecord record;
     private LocalDate checkOutDate;
     private LocalDate dueDate;
@@ -24,7 +23,6 @@ final public class CheckOutEntry implements  Serializable {
         this.dueDate = this.checkOutDate.plusDays(copy.getBook().getMaxCheckoutLength());
         this.copy = copy;
     }
-
     public CheckOutRecord getRecord() {
         return record;
     }
@@ -40,10 +38,8 @@ final public class CheckOutEntry implements  Serializable {
     public void setDueDate(LocalDate date) {
          dueDate = date;
     }
-
     public BookCopy getCopy() {
         return copy;
     }
-
 
 }

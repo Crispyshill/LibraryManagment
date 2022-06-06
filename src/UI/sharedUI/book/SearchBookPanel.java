@@ -48,7 +48,6 @@ public class SearchBookPanel extends JPanel{
         searchBookPanel = new JPanel(new BorderLayout());
         JPanel addFormPanel = createsSearchBookForm();
 
-        // add add button
         JButton addBookBtn = new JButton("Search");
         addBookBtn.addActionListener(new searchBookListener());
 
@@ -81,22 +80,6 @@ public class SearchBookPanel extends JPanel{
         return bookFormPanel;
     }
 
-    private void addRowToJTable(Book book){
-
-        DefaultTableModel model = (DefaultTableModel) myTable.getModel();
-        if(model.getRowCount() > 0)
-            model.setRowCount(0);
-        for(int i : book.getCopyNums()){
-            model.addRow(new  Object[]{
-                    book.getIsbn() ,
-                    book.getTitle(),
-                    "No - " + i,
-                    null,
-                    null}
-            );
-        }
-    }
-
     private void addRowToJTable(List<CheckOutEntry> books){
 
         DefaultTableModel model = (DefaultTableModel) myTable.getModel();
@@ -106,7 +89,7 @@ public class SearchBookPanel extends JPanel{
             model.addRow(new  Object[]{
                     coe.getCopy().getBook().getIsbn(),
                     coe.getCopy().getBook().getTitle(),
-                    "No - " + coe.getCopy().getBook().getNumCopies(),
+                    coe.getCopy().getCopyNum(),
                     coe.getRecord().getMember().getFirstName() + " " + coe.getRecord().getMember().getLastName(),
                     coe.getDueDate()
                 }
@@ -114,19 +97,6 @@ public class SearchBookPanel extends JPanel{
         }
     }
 
-    private void addRowToJTable(CheckOutEntry entry){
-
-        DefaultTableModel model = (DefaultTableModel) myTable.getModel();
-        if(model.getRowCount() > 0)
-            model.setRowCount(0);
-
-        model.addRow(new  Object[]{
-                entry.getCopy().getBook().getIsbn() ,
-                entry.getCopy().getBook().getTitle(),
-                entry.getCopy().getCopyNum(),
-                entry.getCopy().getBook().getAuthors().toString(),
-                entry.getDueDate()});
-    }
     public void clearFormFields(){
         for(JTextField field : bookFields){
             field.setText("");
@@ -150,9 +120,10 @@ public class SearchBookPanel extends JPanel{
                 Book book = ci.getBooks().get(isbn);
                 List<CheckOutEntry> books = ci.allOverDueBooks(isbn);
 
-                if(books.size() == 0)
+                if(books.size() == 0){
+                    addRowToJTable(books);
                     throw new BookCopyException("No record found");
-
+                }
                 addRowToJTable(books);
 
                 System.out.println("1 Results found");
